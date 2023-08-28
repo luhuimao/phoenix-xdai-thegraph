@@ -4,7 +4,7 @@
  * @Author: huhuimao
  * @Date: 2023-01-06 11:00:10
  * @LastEditors: huhuimao
- * @LastEditTime: 2023-08-22 17:02:05
+ * @LastEditTime: 2023-08-25 17:41:56
  */
 // import { BigInt } from "@graphprotocol/graph-ts"
 // import { EnsResolver } from "ethers"
@@ -17,7 +17,8 @@ import {
     RedeptionFeeCharged,
     ClearFund,
     ProcessFundRaise
-} from "../generated/VintageFundingPoolAdapterContract/VintageFundingPoolAdapterContract"
+} from "../generated/VintageFundingPoolAdapterContract/VintageFundingPoolAdapterContract";
+import { VintageFundRaiseAdapterContract } from "../generated/VintageFundRaiseAdapterContract/VintageFundRaiseAdapterContract";
 import { DaoRegistry } from "../generated/DaoRegistry/DaoRegistry";
 import {
     VintageRedempteEntity,
@@ -148,12 +149,25 @@ export function handleClearFund(event: ClearFund): void {
     if (!entity) {
         entity = new VintageClearFundEntity(event.transaction.hash.toHex())
     }
-
+    const daoContract = DaoRegistry.bind(event.params.dao);
+    const vintageNewFundContAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0xa837e34a29b67bf52f684a1c93def79b84b9c012732becee4e5df62809df64ed"));
+    const vintageNewFundCont = VintageFundRaiseAdapterContract.bind(vintageNewFundContAddr);
+    const createdFundRound = vintageNewFundCont.createdFundCounter(event.params.dao);
+    const roundProposalIdEntity = VintageFundRoundToNewFundProposalId.load(event.params.dao.toHexString() + createdFundRound.toString());
+    const fundRoundStatisticEntity = VintageFundRoundStatistic.load(event.params.dao.toString() + createdFundRound.toString());
+    let newFundProposalId = Bytes.empty();
+    let createdSucceedFundCounter = BigInt.fromI32(0);
+    if (roundProposalIdEntity) {
+        newFundProposalId = roundProposalIdEntity.proposalId;
+    }
+    if (fundRoundStatisticEntity) createdSucceedFundCounter = fundRoundStatisticEntity.fundRound;
     entity.daoAddr = event.params.dao;
     entity.amount = event.params.amount;
     entity.executor = event.params.executor;
     entity.timeStamp = event.block.timestamp;
-
+    entity.newFundProposalId = newFundProposalId;
+    entity.createdFundCounter = createdFundRound;
+    entity.createdSucceedFundCounter = createdSucceedFundCounter;
     entity.save();
 }
 

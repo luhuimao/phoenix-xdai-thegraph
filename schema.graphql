@@ -409,6 +409,9 @@ type VintageClearFundEntity @entity{
   timeStamp: BigInt! # uint256
   amount: BigInt! # uint256
   executor: Bytes! #address
+  newFundProposalId: Bytes! # bytes32
+  createdFundCounter: BigInt! # uint256
+  createdSucceedFundCounter: BigInt! # uint256
 }
 
 type VintageRedempteEntity @entity{
@@ -421,6 +424,7 @@ type VintageRedempteEntity @entity{
 type VintageEscrowFundEntity @entity{
   id: ID!
   daoAddr: Bytes! # address
+  newFundProposalId: Bytes! # bytes32
   token: Bytes! # address
   createTimeStamp: BigInt! # uint256
   amount: BigInt! # uint256
@@ -430,6 +434,8 @@ type VintageEscrowFundEntity @entity{
   withdrawTxHash: Bytes! # address
   minFundGoal: BigInt! # uint256
   finalRaised: BigInt! # uint256
+  fundRaisedSucceed:Boolean!
+  succeedFundRound: BigInt! # uint256
 }
 
 type VintageFundRoundStatistic @entity{
