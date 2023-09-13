@@ -4,7 +4,7 @@
  * @Author: huhuimao
  * @Date: 2023-01-06 11:00:10
  * @LastEditors: huhuimao
- * @LastEditTime: 2023-08-25 17:41:56
+ * @LastEditTime: 2023-09-12 13:36:39
  */
 // import { BigInt } from "@graphprotocol/graph-ts"
 // import { EnsResolver } from "ethers"
@@ -182,9 +182,10 @@ export function handleRedeptionFeeCharged(event: RedeptionFeeCharged): void {
     }
 
     entity.chargedFee = event.params.redemptionFee;
+    entity.redemptAmount = event.params.redempAmount;
     entity.account = event.params.account;
     entity.timeStamp = event.block.timestamp;
-
+    entity.txHash = event.transaction.hash;
     entity.save();
 }
 

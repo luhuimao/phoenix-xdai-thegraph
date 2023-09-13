@@ -4,7 +4,7 @@
  * @Author: huhuimao
  * @Date: 2022-11-22 15:32:03
  * @LastEditors: huhuimao
- * @LastEditTime: 2023-08-22 17:32:49
+ * @LastEditTime: 2023-09-12 13:28:53
  */
 import { BigInt, Bytes, Address } from "@graphprotocol/graph-ts"
 import {
@@ -35,13 +35,13 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.daoAddr = event.params.daoAddr;
     entity.proposalId = event.params.proposalId;
     entity.acceptTokenAddr = proposalInfo.getAcceptTokenAddr();
-    entity.fundRaiseTarget = proposalInfo.getFundRaiseTarget();
+    entity.fundRaiseTarget = proposalInfo.getAmountInfo().fundRaiseTarget;
     entity.fundRaiseTargetFromWei = entity.fundRaiseTarget.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.fundRaiseMaxAmount = proposalInfo.getFundRaiseMaxAmount();
+    entity.fundRaiseMaxAmount = proposalInfo.getAmountInfo().fundRaiseMaxAmount;
     entity.fundRaiseMaxAmountFromWei = entity.fundRaiseMaxAmount.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.lpMinDepositAmount = proposalInfo.getLpMinDepositAmount();
+    entity.lpMinDepositAmount = proposalInfo.getAmountInfo().lpMinDepositAmount;
     entity.lpMinDepositAmountFromWei = entity.lpMinDepositAmount.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.lpMaxDepositAmount = proposalInfo.getLpMaxDepositAmount();
+    entity.lpMaxDepositAmount = proposalInfo.getAmountInfo().lpMaxDepositAmount;
     entity.lpMaxDepositAmountFromWei = entity.lpMaxDepositAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.fundRaiseStartTime = proposalInfo.getTimesInfo().fundRaiseStartTime;
     entity.fundRaiseEndTime = proposalInfo.getTimesInfo().fundRaiseEndTime;
