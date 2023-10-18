@@ -4,7 +4,7 @@
  * @Author: huhuimao
  * @Date: 2022-11-22 15:32:03
  * @LastEditors: huhuimao
- * @LastEditTime: 2023-08-17 14:45:31
+ * @LastEditTime: 2023-10-07 13:35:12
  */
 import { BigInt, Bytes, Address } from "@graphprotocol/graph-ts"
 import {
@@ -74,14 +74,11 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.bTokanAddr = proposalInfo.getFundRaiseInfo().bakckerIdentificationInfo.bTokanAddr;
     entity.bTokenId = proposalInfo.getFundRaiseInfo().bakckerIdentificationInfo.bTokenId;
     entity.bMinHoldingAmount = proposalInfo.getFundRaiseInfo().bakckerIdentificationInfo.bMinHoldingAmount;
-    entity.priorityDeposit = proposalInfo.getFundRaiseInfo().priorityDeposit;
-    entity.pPeriod = proposalInfo.getFundRaiseInfo().priorityDepositInfo.pPeriod;
-    entity.pPeriods = proposalInfo.getFundRaiseInfo().priorityDepositInfo.pPeriods;
-    entity.pType = BigInt.fromI32(proposalInfo.getFundRaiseInfo().priorityDepositInfo.pType);
-    entity.pChainId = proposalInfo.getFundRaiseInfo().priorityDepositInfo.pChainId;
-    entity.pTokenAddr = proposalInfo.getFundRaiseInfo().priorityDepositInfo.pTokenAddr;
-    entity.pTokenId = proposalInfo.getFundRaiseInfo().priorityDepositInfo.pTokenId;
-    entity.pMinHolding = proposalInfo.getFundRaiseInfo().priorityDepositInfo.pMinHolding;
+    entity.priorityDepositEnalbe = proposalInfo.getFundRaiseInfo().priorityDepositInfo.enable;
+    entity.priorityDepositType = BigInt.fromI32(proposalInfo.getFundRaiseInfo().priorityDepositInfo.pType);
+    entity.priorityDepositTokenAddr = proposalInfo.getFundRaiseInfo().priorityDepositInfo.token;
+    entity.priorityDepositTokenId = proposalInfo.getFundRaiseInfo().priorityDepositInfo.tokenId;
+    entity.priorityDepositAmount = proposalInfo.getFundRaiseInfo().priorityDepositInfo.amount;
     entity.tokenRewardAmount = proposalInfo.getProposerRewardInfo().tokenRewardAmount;
     entity.cashRewardAmount = proposalInfo.getProposerRewardInfo().cashRewardAmount;
     entity.startVoteTime = proposalInfo.getStartVoteTime();

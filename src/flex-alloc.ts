@@ -4,13 +4,14 @@
  * @Author: huhuimao
  * @Date: 2022-11-16 17:01:41
  * @LastEditors: huhuimao
- * @LastEditTime: 2023-08-17 14:45:53
+ * @LastEditTime: 2023-10-08 13:47:42
  */
 import {
     AllocateToken as AllocateTokenEvent,
     ConfigureDao as ConfigureDaoEvent,
     FlexAllocationAdapterContract
 } from "../generated/FlexAllocationAdapterContract/FlexAllocationAdapterContract"
+import { DaoRegistry } from "../generated/DaoRegistry/DaoRegistry";
 import {
     ConfigureDao,
     FlexFundingProposal,
@@ -39,14 +40,14 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
     entity.save()
 
 
-    let flexFundingProposalEntity = FlexFundingProposal.load(event.params.proposalId.toHexString())
-    if (flexFundingProposalEntity) {
-        const vestingStartTime = flexFundingProposalEntity!.vestingStartTime;
-        const vestingCliffEndTime = flexFundingProposalEntity!.vestingCliffEndTime;
-        const vestingInterval = flexFundingProposalEntity!.vestingInterval;
-        const vestingEndTime = flexFundingProposalEntity!.vestingEndTime;
+    let flexFundingProposalEntity = FlexFundingProposal.load(event.params.proposalId.toHexString());
+    let allocContract = FlexAllocationAdapterContract.bind(event.address);
 
-        let allocContract = FlexAllocationAdapterContract.bind(event.address);
+    if (flexFundingProposalEntity) {
+        const vestingStartTime = flexFundingProposalEntity.vestingStartTime;
+        const vestingCliffEndTime = flexFundingProposalEntity.vestingCliffEndTime;
+        const vestingInterval = flexFundingProposalEntity.vestingInterval;
+        const vestingEndTime = flexFundingProposalEntity.vestingEndTime;
 
         for (var i = 0; i < entity.lps.length; i++) {
             let flexUserVestInfo = new FlexUserVestInfo(entity.proposalId.toHexString() + "-" + entity.lps[i]);
@@ -65,6 +66,27 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
             flexUserVestInfo.totalAmount = vestInfo.getTokenAmount();
             flexUserVestInfo.created = false;
 
+            flexUserVestInfo.save();
+        }
+        const dao = DaoRegistry.bind(event.params.daoAddr);
+        const managementFeeAddress = dao.getAddressConfiguration(Bytes.fromHexString("0x8987d08c67963e4cacd5e5936c122a968c66853d58299dd822c1942227109839"));
+        const vestInfo = allocContract.vestingInfos(
+            event.params.daoAddr,
+            event.params.proposalId,
+            managementFeeAddress
+        );
+
+        if (vestInfo.getTokenAmount() > BigInt.fromI32(0)) {
+            let flexUserVestInfo = new FlexUserVestInfo(entity.proposalId.toHexString() + "-" + managementFeeAddress.toHexString());
+            flexUserVestInfo.daoAddr = event.params.daoAddr;
+            flexUserVestInfo.fundingProposalId = event.params.proposalId;
+            flexUserVestInfo.recipient = managementFeeAddress;
+            flexUserVestInfo.vestingStartTime = vestingStartTime;
+            flexUserVestInfo.vestingCliffEndTime = vestingCliffEndTime;
+            flexUserVestInfo.vestingInterval = vestingInterval;
+            flexUserVestInfo.vestingEndTime = vestingEndTime;
+            flexUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+            flexUserVestInfo.created = false;
             flexUserVestInfo.save();
         }
     }

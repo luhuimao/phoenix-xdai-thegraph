@@ -4,7 +4,7 @@
  * @Author: huhuimao
  * @Date: 2023-01-06 11:00:10
  * @LastEditors: huhuimao
- * @LastEditTime: 2023-09-12 13:36:39
+ * @LastEditTime: 2023-10-16 14:08:46
  */
 // import { BigInt } from "@graphprotocol/graph-ts"
 // import { EnsResolver } from "ethers"
@@ -81,7 +81,6 @@ function remove(investors: string[], account: string): void {
 
 
 export function handleWithDraw(event: WithDraw): void {
-
     // Entities can be loaded from the store using a string ID; this ID
     // needs to be unique across all entities of the same type
     let entity = VintageInvestorAtivity.load(event.transaction.hash.toHex())
@@ -119,25 +118,6 @@ export function handleWithDraw(event: WithDraw): void {
     InvestorBalanceEntity.balance = InvestorBalanceEntity.balance.minus(event.params.amount);
     InvestorBalanceEntity.balanceFromWei = InvestorBalanceEntity.balance.div(BigInt.fromI64(10 ** 18)).toString();
     InvestorBalanceEntity.save();
-
-    // let flexFundingProposal = FlexFundingProposal.load(event.params.proposalId.toString())
-    // if (flexFundingProposal) {
-    //     flexFundingProposal.totalFund = flexFundingProposal.totalFund.minus(event.params.amount);
-    //     flexFundingProposal.totalFundFromWei = flexFundingProposal.totalFund.div(BigInt.fromI64(10 ** 18)).toString();
-
-    //     if (InvestorBalanceEntity.balance.le(BigInt.fromI64(0))) {
-    //         let tem: string[] = [];
-    //         if (flexFundingProposal.investors.length > 0) {
-    //             for (var j = 0; j < flexFundingProposal.investors.length; j++) {
-    //                 tem.push(flexFundingProposal.investors[j])
-    //             }
-    //         }
-    //         remove(tem, event.params.account.toHexString());
-    //         flexFundingProposal.investors = tem;
-    //     }
-
-    //     flexFundingProposal.save();
-    // }
 }
 
 export function handleClearFund(event: ClearFund): void {
@@ -181,6 +161,7 @@ export function handleRedeptionFeeCharged(event: RedeptionFeeCharged): void {
         entity = new VintageRedempteEntity(event.transaction.hash.toHex())
     }
 
+    entity.daoAddr = event.params.dao;
     entity.chargedFee = event.params.redemptionFee;
     entity.redemptAmount = event.params.redempAmount;
     entity.account = event.params.account;
@@ -206,7 +187,7 @@ export function handleProcessFundRaise(event: ProcessFundRaise): void {
         let newFundEntity = VintageNewFundProposal.load(roundProposalIdEntity.proposalId.toHexString());
         if (newFundEntity) {
             newFundEntity.totalFund = totoalRaised;
-            newFundEntity.totalFundFromWei = newFundEntity!.totalFund.div(BigInt.fromI64(10 ** 18)).toString();
+            newFundEntity.totalFundFromWei = newFundEntity.totalFund.div(BigInt.fromI64(10 ** 18)).toString();
             newFundEntity.save();
         }
     }

@@ -65,14 +65,11 @@ type FlexFundingProposal @entity{
   bTokanAddr: Bytes! # address
   bTokenId: BigInt! # uint256
   bMinHoldingAmount: BigInt! # uint256
-  priorityDeposit: Boolean!
-  pPeriod: BigInt! # uint256
-  pPeriods: BigInt! # uint256
-  pType: BigInt! # uint256
-  pChainId: BigInt! # uint256
-  pTokenAddr: Bytes! # address
-  pTokenId: BigInt! # uint256
-  pMinHolding: BigInt! # uint256
+  priorityDepositEnalbe: Boolean!
+  priorityDepositType: BigInt! # uint256
+  priorityDepositTokenAddr: Bytes! # address
+  priorityDepositTokenId: BigInt! # uint256
+  priorityDepositAmount: BigInt! # uint256
   tokenRewardAmount: BigInt! # uint256
   cashRewardAmount: BigInt! # uint256
   startVoteTime: BigInt! # uint256
@@ -232,6 +229,7 @@ type VintageNewFundProposal @entity{
   redemptDuration: BigInt! # uint256
   returnDuration: BigInt! # uint256
   managementFeeRatio: BigInt! # uint256
+  returnTokenManagementFeeRatio: BigInt! # uint256
   redepmtFeeRatio: BigInt! # uint256
   protocolFeeRatio: BigInt! # uint256
   managementFeeAddress: Bytes! # bytes32
@@ -416,9 +414,12 @@ type VintageClearFundEntity @entity{
 
 type VintageRedempteEntity @entity{
   id: ID!
+  daoAddr: Bytes! # address
   timeStamp: BigInt! # uint256
+  redemptAmount: BigInt! # uint256
   chargedFee: BigInt! # uint256
   account: Bytes! # address
+  txHash: Bytes! # address
 }
 
 type VintageEscrowFundEntity @entity{
@@ -486,4 +487,13 @@ type VintageFundRoundToNewFundProposalId @entity{
   daoAddr: Bytes! # address
   fundRound: BigInt! # uint256
   proposalId: Bytes! # bytes32
+}
+
+type VintageDaoSetProposal @entity{
+  id:ID!
+  daoAddr: Bytes! # address
+  proposalId: Bytes! # bytes32
+  proposalType: BigInt! # uint256
+  proposalTypeString: String!
+  state: BigInt! # uint256
 }

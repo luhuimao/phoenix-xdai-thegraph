@@ -4,7 +4,7 @@
  * @Author: huhuimao
  * @Date: 2022-11-16 17:01:41
  * @LastEditors: huhuimao
- * @LastEditTime: 2023-08-17 14:48:39
+ * @LastEditTime: 2023-10-08 13:46:14
  */
 import {
     AllocateToken as AllocateTokenEvent,
@@ -39,10 +39,10 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
 
     let vintageFundingProposalEntity = VintageFundingProposalInfo.load(event.params.proposalId.toHexString())
     if (vintageFundingProposalEntity) {
-        const vestingStartTime = vintageFundingProposalEntity!.vestingStartTime;
-        const vestingCliffEndTime = vintageFundingProposalEntity!.vestingCliffEndTime;
-        const vestingInterval = vintageFundingProposalEntity!.vestingInterval;
-        const vestingEndTime = vintageFundingProposalEntity!.vetingEndTime;
+        const vestingStartTime = vintageFundingProposalEntity.vestingStartTime;
+        const vestingCliffEndTime = vintageFundingProposalEntity.vestingCliffEndTime;
+        const vestingInterval = vintageFundingProposalEntity.vestingInterval;
+        const vestingEndTime = vintageFundingProposalEntity.vetingEndTime;
 
         let allocContract = VintageAllocationAdapterContract.bind(event.address);
 

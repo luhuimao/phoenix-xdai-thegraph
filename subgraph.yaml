@@ -6,9 +6,9 @@ dataSources:
     name: DaoFactory
     network: xdai
     source:
-      address: "0x6833c48C079492cD05B07af51D1A3C994b792603"
+      address: "0x0a526180AF643B09a02e6386c9Aa92DfDdE40092"
       abi: DaoFactory
-      startBlock: 29498964
+      startBlock: 30518068
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -29,9 +29,9 @@ dataSources:
     name: VintageFundRaiseAdapterContract
     network: xdai
     source:
-      address: "0x9014876E92D409b7e2822B7A3CF9A4c8a229BB27"
+      address: "0x33bF903A9D0A0296c8d51064EC61050659d2862A"
       abi: VintageFundRaiseAdapterContract
-      startBlock: 29514543
+      startBlock: 30335879
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -52,9 +52,9 @@ dataSources:
     name: VintageVotingContract
     network: xdai
     source:
-      address: "0x89f45162e2EFFcB975D4Ee25fae77bd938664e7d"
+      address: "0xE160C497A4eF48de6022604fD42340E9c2128454"
       abi: VintageVotingContract
-      startBlock: 29449119
+      startBlock: 29682046
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -73,9 +73,9 @@ dataSources:
     name: VintageRaiserManagementContract
     network: xdai
     source:
-      address: "0x064E33794Ee66C6ea60cbF348D5ca8485b0e5066"
+      address: "0xFaeB671057d93EfEdabD026181BbC933b0EbaC87"
       abi: VintageRaiserManagementContract
-      startBlock: 29499102
+      startBlock: 29682033
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -95,9 +95,9 @@ dataSources:
     name: VintageFundingAdapterContract
     network: xdai
     source:
-      address: "0x2dF322F704d6eCdb05840c3Da379725b68Fb9fb2"
+      address: "0x6157802B38E15e063837F227aA27F6Cb94342f20"
       abi: VintageFundingAdapterContract
-      startBlock: 29499084
+      startBlock: 30364602
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -124,9 +124,9 @@ dataSources:
     name: VintageFundingPoolAdapterContract
     network: xdai
     source:
-      address: "0x8483Cf6cB37B6DbfD813bC268F4D5B3a4998D7e0"
+      address: "0x760c1c47Fc9295B62510c21d47f59F04F12e4587"
       abi: VintageFundingPoolAdapterContract
-      startBlock: 28908383
+      startBlock: 30093662
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -146,7 +146,7 @@ dataSources:
           handler: handleDeposit
         - event: WithDraw(address,uint256,address)
           handler: handleWithDraw
-        - event: RedeptionFeeCharged(uint256,address,uint256)
+        - event: RedeptionFeeCharged(address,address,uint256,uint256)
           handler: handleRedeptionFeeCharged
         - event: ClearFund(address,uint256,address)
           handler: handleClearFund
@@ -157,9 +157,9 @@ dataSources:
     name: VintageVesting
     network: xdai
     source:
-      address: "0x9743825d6329BbbEF9A8DbBeb2e94bbb4288842a"
+      address: "0x6605987037887E4950864d77764aFA6b682C3B36"
       abi: VintageVesting
-      startBlock: 29499130
+      startBlock: 30336115
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -180,9 +180,9 @@ dataSources:
     name: VintageAllocationAdapterContract
     network: xdai
     source:
-      address: "0x567D6326F400571e3b8A52F448917FA549e0472c"
+      address: "0x0373bADDEcD2bEd341c1958abE7BA45987591e1E"
       abi: VintageAllocationAdapterContract
-      startBlock: 28759208
+      startBlock: 30335858
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -203,7 +203,7 @@ dataSources:
     name: VintageEscrowFundAdapterContract
     network: xdai
     source:
-      address: "0x40651C5eBa5c206909bbeEc7D74f769B534d5D75"
+      address: "0x278F18A79Cb84f5557C58F536Ce4A59e36970A4f"
       abi: VintageEscrowFundAdapterContract
       startBlock: 28706125
     mapping:
@@ -222,12 +222,34 @@ dataSources:
           handler: handleEscrowFund
       file: ./src/vintage-escrow-fund.ts
   - kind: ethereum
+    name: VintageDaoSetAdapterContract
+    network: xdai
+    source:
+      address: "0x83C09Fc577FfF2f5D0De1dd2C27cA04949747b5C"
+      abi: VintageDaoSetAdapterContract
+      startBlock: 30478575
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - VintageEscrowFundEntity
+      abis:
+        - name: VintageDaoSetAdapterContract
+          file: ./abis/VintageDaoSetAdapterContract.json
+      eventHandlers:
+        - event: ProposalCreated(address,bytes32,uint8)
+          handler: handleProposalCreated
+        - event:   ProposalProcessed(address,bytes32,uint8,uint256,uint128,uint128,uint128)
+          handler: handleProposalExecuted
+      file: ./src/vintage-daoset.ts
+  - kind: ethereum
     name: SummonDao
     network: xdai
     source:
-      address: "0xC8B06fCdb6E0bc436577997709456FEBFB8F9D85"
+      address: "0xe3771a9b4fa019f37ac1E098339B0151F047D983"
       abi: SummonDao
-      startBlock: 29219144
+      startBlock: 30091358
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -248,9 +270,9 @@ dataSources:
     name: FlexFundingAdapterContract
     network: xdai
     source:
-      address: "0x8dd7D763966d86602Aaf4526496A7f1532767942"
+      address: "0x4979a4748EF5ac5d78BE730B06e1eCd9a3617db2"
       abi: FlexFundingAdapterContract
-      startBlock: 29498998
+      startBlock: 30042896
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -275,9 +297,9 @@ dataSources:
     name: FlexVesting
     network: xdai
     source:
-      address: "0x00942F10AFF9481F593bD2ec17e021Ca050Efc86"
+      address: "0x75365D2eCCc87939411A7a45c54A2fA70234565F"
       abi: FlexVesting
-      startBlock: 29403450
+      startBlock: 30191571
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -298,9 +320,9 @@ dataSources:
     name: StewardManagementContract
     network: xdai
     source:
-      address: "0xFfCB97366027Ec0B90278d497eD191FF1E3D2B85"
+      address: "0xa2C4bF6934e2bCc9913253Ff6749365cD35e6816"
       abi: StewardManagementContract
-      startBlock: 29499026
+      startBlock: 29681946
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -320,9 +342,9 @@ dataSources:
     name: FlexPollingVotingContract
     network: xdai
     source:
-      address: "0x819d88Bf08d54A06962FD1E153F4B05baBCeBC5f"
+      address: "0xBB1Ad4847A16d6Eb6f9Ca666c4fA87B64750a030"
       abi: FlexPollingVotingContract
-      startBlock: 28194542
+      startBlock: 30197068
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -341,9 +363,9 @@ dataSources:
     name: FlexVotingContract
     network: xdai
     source:
-      address: "0x7f69EF7D73eFb3B46FB313adb5E1242556ee2b79"
+      address: "0xe8228E826f5f59Baef67bB42f2996ad1B7E16EA2"
       abi: FlexVotingContract
-      startBlock: 29142022
+      startBlock: 29681981
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -362,9 +384,9 @@ dataSources:
     name: FlexFundingPoolAdapterContract
     network: xdai
     source:
-      address: "0x8E08854a10EF41f12391776FFEc8dE8f4FCf88C2"
+      address: "0xa1A4e79431717dFef26F91D518BAD33F60c46C39"
       abi: FlexFundingPoolAdapterContract
-      startBlock: 29499014
+      startBlock: 30091331
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -387,9 +409,9 @@ dataSources:
     name: FlexAllocationAdapterContract
     network: xdai
     source:
-      address: "0xDD2182cE54d41784f96154d362a6FAD90F9d67bE"
+      address: "0x8D0d0f3FDC281Ab1172406015F7306E15f1930e2"
       abi: FlexAllocationAdapterContract
-      startBlock: 29453156
+      startBlock: 30091243
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -400,6 +422,8 @@ dataSources:
       abis:
         - name: FlexAllocationAdapterContract
           file: ./abis/FlexAllocationAdapterContract.json
+        - name: DaoRegistry
+          file: ./abis/DaoRegistry.json
       eventHandlers:
         - event: AllocateToken(bytes32,address,address,address[])
           handler: handleAllocateToken
