@@ -29,9 +29,9 @@ dataSources:
     name: VintageFundRaiseAdapterContract
     network: xdai
     source:
-      address: "0x33bF903A9D0A0296c8d51064EC61050659d2862A"
+      address: "0x64400d870bD4BF9D6D48e1B5f4888C4B16Bd2b6c"
       abi: VintageFundRaiseAdapterContract
-      startBlock: 30335879
+      startBlock: 30478471
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -73,9 +73,9 @@ dataSources:
     name: VintageRaiserManagementContract
     network: xdai
     source:
-      address: "0xFaeB671057d93EfEdabD026181BbC933b0EbaC87"
+      address: "0xC6EC4D4A1c51018F0a1Fb566ee6cEdFf7344fa47"
       abi: VintageRaiserManagementContract
-      startBlock: 29682033
+      startBlock: 30478549
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -95,9 +95,9 @@ dataSources:
     name: VintageFundingAdapterContract
     network: xdai
     source:
-      address: "0x6157802B38E15e063837F227aA27F6Cb94342f20"
+      address: "0x8A419B450FB96AA72263a07aaDB91f7B40D09771"
       abi: VintageFundingAdapterContract
-      startBlock: 30364602
+      startBlock: 30478489
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -124,9 +124,9 @@ dataSources:
     name: VintageFundingPoolAdapterContract
     network: xdai
     source:
-      address: "0x760c1c47Fc9295B62510c21d47f59F04F12e4587"
+      address: "0x992689E660A74CEBd0C033AC636EfC3A3668F7d8"
       abi: VintageFundingPoolAdapterContract
-      startBlock: 30093662
+      startBlock: 30478510
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -180,9 +180,9 @@ dataSources:
     name: VintageAllocationAdapterContract
     network: xdai
     source:
-      address: "0x0373bADDEcD2bEd341c1958abE7BA45987591e1E"
+      address: "0xDa18245eb5475424e51450e682097F7c3834FB5c"
       abi: VintageAllocationAdapterContract
-      startBlock: 30335858
+      startBlock: 30433599
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
