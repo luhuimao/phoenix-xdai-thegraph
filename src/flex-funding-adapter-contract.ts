@@ -12,7 +12,7 @@ import {
     ProposalCreated,
     ProposalExecuted
 } from "../generated/FlexFundingAdapterContract/FlexFundingAdapterContract"
-import { DaoRegistry } from "../generated/DaoRegistry/DaoRegistry";
+import { DaoRegistry } from "../generated/FlexFundingAdapterContract/DaoRegistry";
 import { FlexFundingPoolAdapterContract } from "../generated/FlexFundingPoolAdapterContract/FlexFundingPoolAdapterContract";
 
 import { FlexFundingProposal, FlexDaoStatistic } from "../generated/schema"
@@ -38,22 +38,22 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.proposalId = event.params.proposalId
     entity.daoAddress = event.params.daoAddress;
     entity.proposer = event.params.proposer;
-    entity.tokenAddress = proposalInfo.getFundingInfo().tokenAddress;
-    entity.minFundingAmount = proposalInfo.getFundingInfo().minFundingAmount;
-    entity.maxFundingAmount = proposalInfo.getFundingInfo().maxFundingAmount;
+    entity.tokenAddress = proposalInfo.getInvestmentInfo().tokenAddress;
+    entity.minFundingAmount = proposalInfo.getInvestmentInfo().minInvestmentAmount;
+    entity.maxFundingAmount = proposalInfo.getInvestmentInfo().maxInvestmentAmount;
     entity.minFundingAmountFromWei = entity.minFundingAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.maxFundingAmountFromWei = entity.maxFundingAmount.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.escrow = proposalInfo.getFundingInfo().escrow;
-    entity.returnTokenAddr = proposalInfo.getFundingInfo().returnTokenAddr;
-    entity.returnTokenAmount = proposalInfo.getFundingInfo().returnTokenAmount;
+    entity.escrow = proposalInfo.getInvestmentInfo().escrow;
+    entity.returnTokenAddr = proposalInfo.getInvestmentInfo().returnTokenAddr;
+    entity.returnTokenAmount = proposalInfo.getInvestmentInfo().returnTokenAmount;
     entity.returnTokenAmountFromWei = entity.returnTokenAmount.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.price = proposalInfo.getFundingInfo().price;
-    entity.minReturnAmount = proposalInfo.getFundingInfo().minReturnAmount;
-    entity.maxReturnAmount = proposalInfo.getFundingInfo().maxReturnAmount;
+    entity.price = proposalInfo.getInvestmentInfo().price;
+    entity.minReturnAmount = proposalInfo.getInvestmentInfo().minReturnAmount;
+    entity.maxReturnAmount = proposalInfo.getInvestmentInfo().maxReturnAmount;
     entity.minReturnAmountFromWei = entity.minReturnAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.maxReturnAmountFromWei = entity.maxReturnAmount.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.approverAddr = proposalInfo.getFundingInfo().approverAddr;
-    entity.recipientAddr = proposalInfo.getFundingInfo().tokenAddress;
+    entity.approverAddr = proposalInfo.getInvestmentInfo().approverAddr;
+    entity.recipientAddr = proposalInfo.getInvestmentInfo().tokenAddress;
     entity.vestingStartTime = proposalInfo.getVestInfo().vestingStartTime;
     entity.vestingCliffEndTime = proposalInfo.getVestInfo().vestingCliffEndTime;
     entity.vestingEndTime = proposalInfo.getVestInfo().vestingEndTime;
@@ -105,7 +105,7 @@ export function handleproposalExecuted(event: ProposalExecuted): void {
         let proposalInfo = flexFundingContract.Proposals((event.params.daoAddress),
             event.params.proposalId);
 
-        entity.returnTokenAmount = proposalInfo.getFundingInfo().returnTokenAmount;
+        entity.returnTokenAmount = proposalInfo.getInvestmentInfo().returnTokenAmount;
         entity.returnTokenAmountFromWei = entity.returnTokenAmount.div(BigInt.fromI64(10 ** 18)).toString();
 
         entity.save();

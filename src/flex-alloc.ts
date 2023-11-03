@@ -11,7 +11,7 @@ import {
     ConfigureDao as ConfigureDaoEvent,
     FlexAllocationAdapterContract
 } from "../generated/FlexAllocationAdapterContract/FlexAllocationAdapterContract"
-import { DaoRegistry } from "../generated/DaoRegistry/DaoRegistry";
+import { DaoRegistry } from "../generated/FlexAllocationAdapterContract/DaoRegistry";
 import {
     ConfigureDao,
     FlexFundingProposal,

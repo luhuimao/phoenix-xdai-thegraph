@@ -19,7 +19,7 @@ import {
     ProcessFundRaise
 } from "../generated/VintageFundingPoolAdapterContract/VintageFundingPoolAdapterContract";
 import { VintageFundRaiseAdapterContract } from "../generated/VintageFundRaiseAdapterContract/VintageFundRaiseAdapterContract";
-import { DaoRegistry } from "../generated/DaoRegistry/DaoRegistry";
+import { DaoRegistry } from "../generated/VintageFundingPoolAdapterContract/DaoRegistry";
 import {
     VintageRedempteEntity,
     VintageInvestorBalance,

@@ -8,6 +8,7 @@
  */
 import {
     AllocateToken as AllocateTokenEvent,
+    ConfigureDao as ConfigureDaoEvent,
     VintageAllocationAdapterContract
 } from "../generated/VintageAllocationAdapterContract/VintageAllocationAdapterContract"
 import {
@@ -68,4 +69,6 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
     }
 
 }
+
+export function handleConfigureDao(event: ConfigureDaoEvent): void { }
 

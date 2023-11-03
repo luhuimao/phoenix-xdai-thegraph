@@ -13,7 +13,7 @@ import {
     VintageFundingAdapterContract
 } from "../generated/VintageFundingAdapterContract/VintageFundingAdapterContract";
 import { VintageFundRaiseAdapterContract } from "../generated/VintageFundRaiseAdapterContract/VintageFundRaiseAdapterContract";
-import { DaoRegistry } from "../generated/DaoRegistry/DaoRegistry";
+import { DaoRegistry } from "../generated/VintageFundingAdapterContract/DaoRegistry";
 import { VintageFundingProposalInfo, VintageDaoStatistic, VintageProposalVoteInfo, VintageFundRoundStatistic } from "../generated/schema"
 import { bigInt, BigInt, Bytes, Address, log } from "@graphprotocol/graph-ts"
 
@@ -42,8 +42,8 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
     entity.minDepositAmountFromWei = entity.minDepositAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.maxDepositAmount = BigInt.fromI32(0);
     entity.maxDepositAmountFromWei = entity.maxDepositAmount.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.fundingToken = vintageFundingProposalInfo.getFundingToken();
-    entity.fundingAmount = vintageFundingProposalInfo.getFundingAmount();
+    entity.fundingToken = vintageFundingProposalInfo.getInvestmentToken();
+    entity.fundingAmount = vintageFundingProposalInfo.getInvestmentAmount();
     entity.fundingAmountFromWei = entity.fundingAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.totalAmount = vintageFundingProposalInfo.getTotalAmount();
     entity.totalAmountFromWei = entity.totalAmount.div(BigInt.fromI64(10 ** 18)).toString();
