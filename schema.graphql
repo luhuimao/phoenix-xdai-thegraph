@@ -209,6 +209,17 @@ type FlexDaoStatistic @entity{
   members: BigInt! # uint256
 }
 
+type FlexDaosetProposal @entity{
+  id: ID!
+  daoAddr: Bytes! # address
+  proposalId: Bytes! # bytes32
+  proposalType: BigInt! # uint256
+  proposalTypeString: String!
+  state: BigInt! # uint256
+  creationTime: BigInt! # uint256
+  createTimeString: String!
+}
+
 type VintageNewFundProposal @entity{
   id: ID!
   daoAddr: Bytes! # address
@@ -336,9 +347,9 @@ type VintageFundingProposalInfo @entity{
   vestingCliffEndTime: BigInt! # uint256
   vestingCliffLockAmount: BigInt! # uint256
   vestingInterval: BigInt! # uint256
-  returnToken: Bytes! # bytes32
-  returnTokenAmount: BigInt! # uint256
-  returnTokenAmountFromWei: String!
+  paybackToken: Bytes! # bytes32
+  paybackTokenAmount: BigInt! # uint256
+  paybackTokenAmountFromWei: String!
   inQueueTimestamp: BigInt! # uint256
   proposalStartVotingTimestamp: BigInt! # uint256
   proposalStopVotingTimestamp: BigInt! # uint256

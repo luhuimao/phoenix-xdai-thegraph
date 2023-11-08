@@ -11,10 +11,10 @@
 // import { EventLog } from "ethers/types/contract"
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
-    FlexFundingPoolAdapterContract,
+    FlexInvestmentPoolAdapterContract,
     Deposit,
     WithDraw
-} from "../generated/FlexFundingPoolAdapterContract/FlexFundingPoolAdapterContract"
+} from "../generated/FlexInvestmentPoolAdapterContract/FlexInvestmentPoolAdapterContract"
 import { InvestorBalance, InvestorAtivity, FlexFundingProposal, FlexDaoStatistic } from "../generated/schema"
 
 export function handleDeposit(event: Deposit): void {

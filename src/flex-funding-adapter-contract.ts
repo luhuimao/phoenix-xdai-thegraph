@@ -13,7 +13,7 @@ import {
     ProposalExecuted
 } from "../generated/FlexFundingAdapterContract/FlexFundingAdapterContract"
 import { DaoRegistry } from "../generated/FlexFundingAdapterContract/DaoRegistry";
-import { FlexFundingPoolAdapterContract } from "../generated/FlexFundingPoolAdapterContract/FlexFundingPoolAdapterContract";
+import { FlexInvestmentPoolAdapterContract } from "../generated/FlexInvestmentPoolAdapterContract/FlexInvestmentPoolAdapterContract";
 
 import { FlexFundingProposal, FlexDaoStatistic } from "../generated/schema"
 
@@ -44,8 +44,8 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.minFundingAmountFromWei = entity.minFundingAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.maxFundingAmountFromWei = entity.maxFundingAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.escrow = proposalInfo.getInvestmentInfo().escrow;
-    entity.returnTokenAddr = proposalInfo.getInvestmentInfo().returnTokenAddr;
-    entity.returnTokenAmount = proposalInfo.getInvestmentInfo().returnTokenAmount;
+    entity.returnTokenAddr = proposalInfo.getInvestmentInfo().paybackTokenAddr;
+    entity.returnTokenAmount = proposalInfo.getInvestmentInfo().paybackTokenAmount;
     entity.returnTokenAmountFromWei = entity.returnTokenAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.price = proposalInfo.getInvestmentInfo().price;
     entity.minReturnAmount = proposalInfo.getInvestmentInfo().minReturnAmount;
@@ -68,12 +68,12 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.maxDepositAmount = proposalInfo.getFundRaiseInfo().maxDepositAmount;
     entity.minDepositAmountFromWei = entity.minDepositAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.maxDepositAmountFromWei = entity.maxDepositAmount.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.backerIdentification = proposalInfo.getFundRaiseInfo().backerIdentification;
-    entity.bType = BigInt.fromI32(proposalInfo.getFundRaiseInfo().bakckerIdentificationInfo.bType);
-    entity.bChainId = proposalInfo.getFundRaiseInfo().bakckerIdentificationInfo.bChainId;
-    entity.bTokanAddr = proposalInfo.getFundRaiseInfo().bakckerIdentificationInfo.bTokanAddr;
-    entity.bTokenId = proposalInfo.getFundRaiseInfo().bakckerIdentificationInfo.bTokenId;
-    entity.bMinHoldingAmount = proposalInfo.getFundRaiseInfo().bakckerIdentificationInfo.bMinHoldingAmount;
+    entity.backerIdentification = proposalInfo.getFundRaiseInfo().investorIdentification;
+    entity.bType = BigInt.fromI32(proposalInfo.getFundRaiseInfo().investorIdentificationInfo.bType);
+    entity.bChainId = proposalInfo.getFundRaiseInfo().investorIdentificationInfo.bChainId;
+    entity.bTokanAddr = proposalInfo.getFundRaiseInfo().investorIdentificationInfo.bTokanAddr;
+    entity.bTokenId = proposalInfo.getFundRaiseInfo().investorIdentificationInfo.bTokenId;
+    entity.bMinHoldingAmount = proposalInfo.getFundRaiseInfo().investorIdentificationInfo.bMinHoldingAmount;
     entity.priorityDepositEnalbe = proposalInfo.getFundRaiseInfo().priorityDepositInfo.enable;
     entity.priorityDepositType = BigInt.fromI32(proposalInfo.getFundRaiseInfo().priorityDepositInfo.pType);
     entity.priorityDepositTokenAddr = proposalInfo.getFundRaiseInfo().priorityDepositInfo.token;
@@ -105,7 +105,7 @@ export function handleproposalExecuted(event: ProposalExecuted): void {
         let proposalInfo = flexFundingContract.Proposals((event.params.daoAddress),
             event.params.proposalId);
 
-        entity.returnTokenAmount = proposalInfo.getInvestmentInfo().returnTokenAmount;
+        entity.returnTokenAmount = proposalInfo.getInvestmentInfo().paybackTokenAmount;
         entity.returnTokenAmountFromWei = entity.returnTokenAmount.div(BigInt.fromI64(10 ** 18)).toString();
 
         entity.save();
@@ -129,7 +129,7 @@ export function handleproposalExecuted(event: ProposalExecuted): void {
 
             const daoContract = DaoRegistry.bind(event.params.daoAddress);
             const flexFundingPoolAdaptAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x2207fd6117465cefcba0abc867150698c0464aa41a293ec29ca01b67a6350c3c"));
-            const flexFundingPoolAdapt = FlexFundingPoolAdapterContract.bind(flexFundingPoolAdaptAddr);
+            const flexFundingPoolAdapt = FlexInvestmentPoolAdapterContract.bind(flexFundingPoolAdaptAddr);
 
             const raiseAmount = flexFundingPoolAdapt.getTotalFundByProposalId(event.params.daoAddress, event.params.proposalId);
 

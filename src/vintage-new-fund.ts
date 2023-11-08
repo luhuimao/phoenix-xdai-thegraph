@@ -43,9 +43,9 @@ export function handleProposalCreated(event: ProposalCreated): void {
         entity.fundTerm = proposalInfo.getTimesInfo().fundTerm;
         entity.redemptPeriod = proposalInfo.getTimesInfo().redemptPeriod;
         entity.redemptDuration = proposalInfo.getTimesInfo().redemptDuration;
-        entity.returnDuration = proposalInfo.getTimesInfo().returnDuration;
+        entity.returnDuration = proposalInfo.getTimesInfo().refundDuration;
         entity.managementFeeRatio = proposalInfo.getFeeInfo().managementFeeRatio;
-        entity.returnTokenManagementFeeRatio = proposalInfo.getFeeInfo().returnTokenManagementFeeRatio;
+        entity.returnTokenManagementFeeRatio = proposalInfo.getFeeInfo().paybackTokenManagementFeeRatio;
         entity.redepmtFeeRatio = proposalInfo.getFeeInfo().redepmtFeeRatio;
         entity.protocolFeeRatio = proposalInfo.getFeeInfo().protocolFeeRatio;
         entity.managementFeeAddress = proposalInfo.getFeeInfo().managementFeeAddress;

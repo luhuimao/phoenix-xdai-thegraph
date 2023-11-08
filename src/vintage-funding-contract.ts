@@ -36,8 +36,8 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
     entity.proposalId = event.params.proposalId
     entity.daoAddress = event.params.daoAddr;
     entity.state = BigInt.fromI32(0);
-    entity.escrow = vintageFundingProposalInfo.getProposalReturnTokenInfo().escrow;
-    entity.approverAddr = vintageFundingProposalInfo.getProposalReturnTokenInfo().approveOwnerAddr;
+    entity.escrow = vintageFundingProposalInfo.getProposalPaybackTokenInfo().escrow;
+    entity.approverAddr = vintageFundingProposalInfo.getProposalPaybackTokenInfo().approveOwnerAddr;
     entity.minDepositAmount = BigInt.fromI32(0);
     entity.minDepositAmountFromWei = entity.minDepositAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.maxDepositAmount = BigInt.fromI32(0);
@@ -55,9 +55,9 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
     entity.vestingCliffEndTime = vintageFundingProposalInfo.getVestInfo().vestingCliffEndTime;
     entity.vestingCliffLockAmount = vintageFundingProposalInfo.getVestInfo().vestingCliffLockAmount;
     entity.vestingInterval = vintageFundingProposalInfo.getVestInfo().vestingInterval;
-    entity.returnToken = vintageFundingProposalInfo.getProposalReturnTokenInfo().returnToken;
-    entity.returnTokenAmount = vintageFundingProposalInfo.getProposalReturnTokenInfo().returnTokenAmount;
-    entity.returnTokenAmountFromWei = entity.returnTokenAmount.div(BigInt.fromI64(10 ** 18)).toString();
+    entity.paybackToken = vintageFundingProposalInfo.getProposalPaybackTokenInfo().paybackToken;
+    entity.paybackTokenAmount = vintageFundingProposalInfo.getProposalPaybackTokenInfo().paybackTokenAmount;
+    entity.paybackTokenAmountFromWei = entity.paybackTokenAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.inQueueTimestamp = vintageFundingProposalInfo.getProposalTimeInfo().inQueueTimestamp;
     entity.proposalStartVotingTimestamp = vintageFundingProposalInfo.getProposalTimeInfo().proposalStartVotingTimestamp;
     entity.proposalStopVotingTimestamp = vintageFundingProposalInfo.getProposalTimeInfo().proposalStopVotingTimestamp;
