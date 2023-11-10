@@ -65,8 +65,6 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
     entity.createDateTime = new Date(event.block.timestamp.toI64() * 1000).toISOString();
 
     entity.save()
-
-
 }
 
 export function handleProposalExecuted(event: ProposalExecutedEvent): void {
@@ -115,16 +113,7 @@ export function handleProposalExecuted(event: ProposalExecutedEvent): void {
         const fundRaiseContract = VintageFundRaiseAdapterContract.bind(fundRaiseAddress);
         const currentFundRound = fundRaiseContract.createdFundCounter(event.params.daoAddr);
 
-        // let fundRoundEntity = VintageFundRoundStatistic.load(event.params.daoAddr.toString() + currentFundRound.toString());
-
-        // if (!fundRoundEntity) {
-        //     fundRoundEntity = new VintageFundRoundStatistic(event.params.daoAddr.toString() + currentFundRound.toString());
-        //     fundRoundEntity.daoAddr = event.params.daoAddr;
-        //     fundRoundEntity.fundInvested = BigInt.fromI32(0);
-        //     fundRoundEntity.fundRaised = BigInt.fromI32(0);
-        //     fundRoundEntity.fundRound = currentFundRound;
-        //     fundRoundEntity.fundedVentures = BigInt.fromI32(0);
-        // }
+       
         if (proposalEntity.state == BigInt.fromI32(3)) {
             let fundRoundEntity = VintageFundRoundStatistic.load(event.params.daoAddr.toString() + currentFundRound.toString());
             if (fundRoundEntity) {
