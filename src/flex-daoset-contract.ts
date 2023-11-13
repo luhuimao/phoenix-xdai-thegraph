@@ -78,7 +78,7 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
     if (entity) {
         switch (entity.proposalType.toI32()) {
             case 0:
-                proposalState = BigInt.fromI32(flexDaosetContract.participantCapProposals(event.params.daoAddr,
+                proposalState = BigInt.fromI32(flexDaosetContract.investorCapProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
                 break;
             case 1: 
