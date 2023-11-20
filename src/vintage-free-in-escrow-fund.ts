@@ -15,7 +15,7 @@ import {
     WithDraw as WithDrawEvent
 } from "../generated/vintageEscrowFundAdapterContract/vintageEscrowFundAdapterContract"
 import {
-    VintageEscrowFundEntity,
+    VintageFreeInEscrowFundEntity,
     VintageFundRoundToNewFundProposalId,
     VintageNewFundProposal,
     VintageFundRoundStatistic
@@ -23,7 +23,7 @@ import {
 
 
 export function handleWithDraw(event: WithDrawEvent): void {
-    let entity = VintageEscrowFundEntity.load(event.params.dao.toHexString() + event.params.account.toHexString() + event.params.fundRound.toHexString());
+    let entity = VintageFreeInEscrowFundEntity.load(event.params.dao.toHexString() + event.params.account.toHexString() + event.params.fundRound.toHexString());
     if (entity) {
         entity.amount = BigInt.fromI32(0);
         entity.amountFromWei = "0";
@@ -36,10 +36,10 @@ export function handleWithDraw(event: WithDrawEvent): void {
 }
 
 export function handleEscrowFund(event: EscorwFundEvent): void {
-    let entity = VintageEscrowFundEntity.load(event.params.dao.toHexString() + event.params.account.toHexString() + event.params.fundRound.toHexString());
+    let entity = VintageFreeInEscrowFundEntity.load(event.params.dao.toHexString() + event.params.account.toHexString() + event.params.fundRound.toHexString());
 
     if (!entity) {
-        entity = new VintageEscrowFundEntity(event.params.dao.toHexString() + event.params.account.toHexString() + event.params.fundRound.toHexString());
+        entity = new VintageFreeInEscrowFundEntity(event.params.dao.toHexString() + event.params.account.toHexString() + event.params.fundRound.toHexString());
     }
     let newFundEntity: VintageNewFundProposal | null;
     let minfundgoal = BigInt.fromI32(0);
@@ -58,7 +58,7 @@ export function handleEscrowFund(event: EscorwFundEvent): void {
     entity.daoAddr = event.params.dao;
     entity.newFundProposalId = newFundProposalId;
     entity.account = event.params.account;
-    entity.fundRound = event.params.fundRound;
+    // entity.fundRound = event.params.fundRound;
     entity.token = event.params.token;
     entity.createTimeStamp = event.block.timestamp;
     entity.createDateTime = new Date(entity.createTimeStamp.toI64() * 1000).toISOString();
@@ -67,17 +67,17 @@ export function handleEscrowFund(event: EscorwFundEvent): void {
     entity.amount = event.params.amount;
     entity.amountFromWei = entity.amount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.withdrawTxHash = Bytes.empty();
-    entity.minFundGoal = minfundgoal;
-    entity.minFundGoalFromWei = entity.minFundGoal.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.finalRaised = finalraised;
-    entity.finalRaisedFromWei = entity.finalRaised.div(BigInt.fromI64(10 ** 18)).toString();
-    entity.succeedFundRound = BigInt.fromI32(0);
-    if (finalraised >= minfundgoal)
-        entity.fundRaisedSucceed = true;
-    else entity.fundRaisedSucceed = false;
-    const fundRoundStatisticEntity = VintageFundRoundStatistic.load(event.params.dao.toString() + event.params.fundRound.toString());
-    if (fundRoundStatisticEntity) {
-        entity.succeedFundRound = fundRoundStatisticEntity.fundRound;
-    }
+    // entity.minFundGoal = minfundgoal;
+    // entity.minFundGoalFromWei = entity.minFundGoal.div(BigInt.fromI64(10 ** 18)).toString();
+    // entity.finalRaised = finalraised;
+    // entity.finalRaisedFromWei = entity.finalRaised.div(BigInt.fromI64(10 ** 18)).toString();
+    // entity.succeedFundRound = BigInt.fromI32(0);
+    // if (finalraised >= minfundgoal)
+    //     entity.fundRaisedSucceed = true;
+    // else entity.fundRaisedSucceed = false;
+    // const fundRoundStatisticEntity = VintageFundRoundStatistic.load(event.params.dao.toString() + event.params.fundRound.toString());
+    // if (fundRoundStatisticEntity) {
+    //     entity.succeedFundRound = fundRoundStatisticEntity.fundRound;
+    // }
     entity.save();
 }

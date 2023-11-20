@@ -12,7 +12,13 @@ import {
     ProposalCreated,
     proposalExecuted
 } from "../generated/VintageFundRaiseAdapterContract/VintageFundRaiseAdapterContract"
-import { VintageNewFundProposal, VintageProposalVoteInfo, VintageFundRoundToNewFundProposalId } from "../generated/schema"
+import { ERC20 } from "../generated/VintageFundRaiseAdapterContract/ERC20";
+import {
+    VintageNewFundProposal,
+    VintageProposalVoteInfo,
+    VintageFundRoundToNewFundProposalId,
+    VintageFundRaiseEntity
+} from "../generated/schema"
 
 export function handleProposalCreated(event: ProposalCreated): void {
     // log.error("proposalId {}", [event.params.proposalId.toHexString()]);
@@ -60,6 +66,32 @@ export function handleProposalCreated(event: ProposalCreated): void {
         entity.totalFundFromWei = "0";
 
         entity.save()
+
+        const erc20 = ERC20.bind(Address.fromBytes(entity.acceptTokenAddr));
+        let fundRaiseEntity = new VintageFundRaiseEntity(event.params.proposalId.toHexString());
+        fundRaiseEntity.daoAddr = event.params.daoAddr;
+        fundRaiseEntity.fundRaiseProposalId = event.params.proposalId;
+        fundRaiseEntity.tokenName = erc20.name();
+        fundRaiseEntity.fundNumber = " ";
+        fundRaiseEntity.raisedAmount = BigInt.fromI32(0);
+        fundRaiseEntity.raisedAmountFromWei = "0";
+        fundRaiseEntity.miniGoalAmount = entity.fundRaiseTarget;
+        fundRaiseEntity.miniGoalAmountFromWei = entity.fundRaiseTargetFromWei;
+        fundRaiseEntity.maxGoalAmount = entity.fundRaiseMaxAmount;
+        fundRaiseEntity.maxGoalAmountFromWei = entity.fundRaiseMaxAmountFromWei;
+        fundRaiseEntity.fundRaiseState = "";
+        fundRaiseEntity.fundRaiseStartTimestamp = entity.fundRaiseStartTime;
+        fundRaiseEntity.fundRaiseStartDateTime = new Date(fundRaiseEntity.fundRaiseStartTimestamp.toI64() * 1000).toISOString();
+        fundRaiseEntity.fundRaiseEndTimestamp = entity.fundRaiseEndTime;
+        fundRaiseEntity.fundRaiseEndDateTime = new Date(fundRaiseEntity.fundRaiseEndTimestamp.toI64() * 1000).toISOString();
+        fundRaiseEntity.fundStartTimestamp = BigInt.fromI32(0);
+        fundRaiseEntity.fundStartDateTime = "0";
+        fundRaiseEntity.fundEndTimestamp = BigInt.fromI32(0);
+        fundRaiseEntity.fundEndDateTime = "0";
+        fundRaiseEntity.fundInvested = BigInt.fromI32(0);
+        fundRaiseEntity.fundInvestedFromWei = "0";
+        fundRaiseEntity.fundedVentures = BigInt.fromI32(0);
+        fundRaiseEntity.save();
     }
 }
 
@@ -70,12 +102,14 @@ export function handleProposalExecuted(event: proposalExecuted): void {
     // `null` checks allow to create entities on demand
     if (entity) {
         entity.state = BigInt.fromI32(event.params.state);
+        let fundNumber = BigInt.fromI32(0);
         if (event.params.state == 2) {
             entity.fundStartTime = event.block.timestamp;
             entity.fundEndTime = entity.fundStartTime.plus(entity.fundTerm);
 
             let vintageFundRaiseContract = VintageFundRaiseAdapterContract.bind(event.address);
             const fundRound = vintageFundRaiseContract.createdFundCounter(event.params.daoAddr);
+            fundNumber = fundRound;
             let roundPropossalEntity = new VintageFundRoundToNewFundProposalId(event.params.daoAddr.toHexString() + fundRound.toString());
             roundPropossalEntity.daoAddr = event.params.daoAddr;
             roundPropossalEntity.fundRound = fundRound;
@@ -83,6 +117,16 @@ export function handleProposalExecuted(event: proposalExecuted): void {
             roundPropossalEntity.save();
         }
         entity.save();
+
+        let fundRaiseEntity = VintageFundRaiseEntity.load(event.params.proposalId.toHexString());
+        if (fundRaiseEntity) {
+            fundRaiseEntity.fundStartTimestamp = event.block.timestamp;
+            fundRaiseEntity.fundStartDateTime = new Date(fundRaiseEntity.fundStartTimestamp.toI64() * 1000).toISOString();
+            fundRaiseEntity.fundEndTimestamp = entity.fundEndTime;
+            fundRaiseEntity.fundEndDateTime = new Date(fundRaiseEntity.fundEndTimestamp.toI64() * 1000).toISOString();
+            fundRaiseEntity.fundNumber = "FundEstablishment#" + fundNumber.toString();
+            fundRaiseEntity.save();
+        }
     }
 
     let voteInfoEntity = VintageProposalVoteInfo.load(event.params.proposalId.toHexString());

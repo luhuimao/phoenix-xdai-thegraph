@@ -29,7 +29,8 @@ import {
     VintageClearFundEntity,
     VintageFundRoundStatistic,
     VintageSuccessedFundCounter,
-    VintageFundRoundToNewFundProposalId
+    VintageFundRoundToNewFundProposalId,
+    VintageFundRaiseEntity
 } from "../generated/schema"
 
 export function handleDeposit(event: Deposit): void {
@@ -41,13 +42,36 @@ export function handleDeposit(event: Deposit): void {
     if (!entity) {
         entity = new VintageInvestorAtivity(event.transaction.hash.toHex())
     }
-    let InvestorBalanceEntity = VintageInvestorBalance.load(event.params.daoAddress.toString() + event.params.account.toString());
-    if (!InvestorBalanceEntity) {
-        InvestorBalanceEntity = new VintageInvestorBalance(event.params.daoAddress.toString() + event.params.account.toString());
-        InvestorBalanceEntity.balance = BigInt.fromI64(0);
-        InvestorBalanceEntity.balanceFromWei = "0";
-        InvestorBalanceEntity.daoAddr = event.params.daoAddress;
-        InvestorBalanceEntity.account = event.params.account;
+    const daoContract = DaoRegistry.bind(event.params.daoAddress);
+    const vintageNewFundContAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0xa837e34a29b67bf52f684a1c93def79b84b9c012732becee4e5df62809df64ed"));
+    const vintageNewFundCont = VintageFundRaiseAdapterContract.bind(vintageNewFundContAddr);
+    const createdNewFundId = vintageNewFundCont.createdFundCounter(event.params.daoAddress);
+    const roundProposalIdEntity = VintageFundRoundToNewFundProposalId.load(event.params.daoAddress.toHexString() + createdNewFundId.toString());
+
+
+    if (roundProposalIdEntity) {
+        let InvestorBalanceEntity = VintageInvestorBalance.load(
+            event.params.daoAddress.toString()
+            + roundProposalIdEntity.proposalId.toString()
+            + event.params.account.toString());
+
+        if (!InvestorBalanceEntity) {
+            InvestorBalanceEntity = new VintageInvestorBalance(
+                event.params.daoAddress.toString() +
+                roundProposalIdEntity.proposalId.toString() +
+                event.params.account.toString());
+
+            InvestorBalanceEntity.balance = BigInt.fromI64(0);
+            InvestorBalanceEntity.balanceFromWei = "0";
+            InvestorBalanceEntity.daoAddr = event.params.daoAddress;
+            InvestorBalanceEntity.account = event.params.account;
+            InvestorBalanceEntity.newFundProposalId = roundProposalIdEntity.proposalId;
+            InvestorBalanceEntity.fundId = createdNewFundId;
+        }
+
+        InvestorBalanceEntity.balance = InvestorBalanceEntity.balance.plus(event.params.amount);
+        InvestorBalanceEntity.balanceFromWei = InvestorBalanceEntity.balance.div(BigInt.fromI64(10 ** 18)).toString();
+        InvestorBalanceEntity.save();
     }
 
     // Entity fields can be set based on event parameters
@@ -63,9 +87,7 @@ export function handleDeposit(event: Deposit): void {
     // Entities can be written to the store with `.save()`
     entity.save()
 
-    InvestorBalanceEntity.balance = InvestorBalanceEntity.balance.plus(event.params.amount);
-    InvestorBalanceEntity.balanceFromWei = InvestorBalanceEntity.balance.div(BigInt.fromI64(10 ** 18)).toString();
-    InvestorBalanceEntity.save();
+
 }
 
 function contains(investors: string[], account: string): boolean {
@@ -89,17 +111,28 @@ export function handleWithDraw(event: WithDraw): void {
     if (!entity) {
         entity = new VintageInvestorAtivity(event.transaction.hash.toHex())
     }
-    let InvestorBalanceEntity = VintageInvestorBalance.load(
-        event.params.daoAddress.toString() + event.params.account.toString()
-    );
-    if (!InvestorBalanceEntity) {
-        InvestorBalanceEntity = new VintageInvestorBalance(
-            event.params.daoAddress.toString() + event.params.account.toString()
-        );
-        InvestorBalanceEntity.balance = BigInt.fromI64(0);
-        InvestorBalanceEntity.daoAddr = event.params.daoAddress;
-        InvestorBalanceEntity.account = event.params.account;
+
+    const daoContract = DaoRegistry.bind(event.params.daoAddress);
+    const vintageNewFundContAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0xa837e34a29b67bf52f684a1c93def79b84b9c012732becee4e5df62809df64ed"));
+    const vintageNewFundCont = VintageFundRaiseAdapterContract.bind(vintageNewFundContAddr);
+    const createdNewFundId = vintageNewFundCont.createdFundCounter(event.params.daoAddress);
+    const roundProposalIdEntity = VintageFundRoundToNewFundProposalId.load(event.params.daoAddress.toHexString() + createdNewFundId.toString());
+
+
+    if (roundProposalIdEntity) {
+        let InvestorBalanceEntity = VintageInvestorBalance.load(
+            event.params.daoAddress.toString()
+            + roundProposalIdEntity.proposalId.toString()
+            + event.params.account.toString());
+
+        if (InvestorBalanceEntity) {
+            InvestorBalanceEntity.balance = InvestorBalanceEntity.balance.minus(event.params.amount);
+            InvestorBalanceEntity.balanceFromWei = InvestorBalanceEntity.balance.div(BigInt.fromI64(10 ** 18)).toString();
+            InvestorBalanceEntity.save();
+        }
+
     }
+
 
     // Entity fields can be set based on event parameters
     entity.txHash = event.transaction.hash;
@@ -115,9 +148,7 @@ export function handleWithDraw(event: WithDraw): void {
     entity.save()
 
 
-    InvestorBalanceEntity.balance = InvestorBalanceEntity.balance.minus(event.params.amount);
-    InvestorBalanceEntity.balanceFromWei = InvestorBalanceEntity.balance.div(BigInt.fromI64(10 ** 18)).toString();
-    InvestorBalanceEntity.save();
+
 }
 
 export function handleClearFund(event: ClearFund): void {
@@ -190,6 +221,16 @@ export function handleProcessFundRaise(event: ProcessFundRaise): void {
             newFundEntity.totalFundFromWei = newFundEntity.totalFund.div(BigInt.fromI64(10 ** 18)).toString();
             newFundEntity.save();
         }
+
+        let fundRaiseEntity = VintageFundRaiseEntity.load(roundProposalIdEntity.proposalId.toHexString());
+        if (fundRaiseEntity) {
+            fundRaiseEntity.raisedAmount = event.params.fundRaisedAmount;
+            fundRaiseEntity.raisedAmountFromWei = fundRaiseEntity.raisedAmount.div(BigInt.fromI64(10 ** 18)).toString();
+            fundRaiseEntity.fundRaiseState = fundRaisedState == 2 ? "succeed" : "failed";
+
+            fundRaiseEntity.save();
+        }
+
     }
     // log.debug("fundRaisedState {}", [fundRaisedState.toString()]);
     if (fundRaisedState == 2) {

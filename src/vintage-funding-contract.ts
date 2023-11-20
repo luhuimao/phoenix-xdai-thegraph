@@ -14,7 +14,14 @@ import {
 } from "../generated/VintageFundingAdapterContract/VintageFundingAdapterContract";
 import { VintageFundRaiseAdapterContract } from "../generated/VintageFundRaiseAdapterContract/VintageFundRaiseAdapterContract";
 import { DaoRegistry } from "../generated/VintageFundingAdapterContract/DaoRegistry";
-import { VintageFundingProposalInfo, VintageDaoStatistic, VintageProposalVoteInfo, VintageFundRoundStatistic } from "../generated/schema"
+import { 
+    VintageFundingProposalInfo, 
+    VintageFundRoundToNewFundProposalId, 
+    VintageDaoStatistic, 
+    VintageProposalVoteInfo,
+    VintageFundRoundStatistic,
+    VintageFundRaiseEntity
+} from "../generated/schema"
 import { bigInt, BigInt, Bytes, Address, log } from "@graphprotocol/graph-ts"
 
 export function handleProposalCreated(event: ProposalCreatedEvent): void {
@@ -120,6 +127,19 @@ export function handleProposalExecuted(event: ProposalExecutedEvent): void {
                 fundRoundEntity.fundInvested = fundRoundEntity.fundInvested.plus(proposalEntity.fundingAmount);
                 fundRoundEntity.fundedVentures = fundRoundEntity.fundedVentures.plus(BigInt.fromI32(1));
                 fundRoundEntity.save();
+            }
+
+            const roundProposalIdEntity = VintageFundRoundToNewFundProposalId.load(event.params.daoAddr.toHexString() + currentFundRound.toString());
+            if (roundProposalIdEntity) {
+                const newFundProposalId = roundProposalIdEntity.proposalId;
+                let fundRaiseEntity = VintageFundRaiseEntity.load(roundProposalIdEntity.proposalId.toHexString());
+                if(fundRaiseEntity){
+                    fundRaiseEntity.fundInvested = fundRaiseEntity.fundInvested.plus(proposalEntity.fundingAmount);
+                    fundRaiseEntity.fundInvestedFromWei = fundRaiseEntity.fundInvested.div(BigInt.fromI64(10 ** 18)).toString();
+                    fundRaiseEntity.fundedVentures = fundRaiseEntity.fundedVentures.plus(BigInt.fromI32(1));
+        
+                    fundRaiseEntity.save();
+                }
             }
         }
     }

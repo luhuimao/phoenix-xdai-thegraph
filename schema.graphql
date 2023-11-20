@@ -363,6 +363,8 @@ type VintageInvestorBalance @entity{
   account:  Bytes! # address
   balance: BigInt! # uint256
   balanceFromWei: String!
+  newFundProposalId: Bytes! # bytes32
+  fundId: BigInt! # uint256
 }
 
 type VintageDaoStatistic @entity{
@@ -439,15 +441,35 @@ type VintageEscrowFundEntity @entity{
   newFundProposalId: Bytes! # bytes32
   token: Bytes! # address
   createTimeStamp: BigInt! # uint256
+  createDateTime: String!
   amount: BigInt! # uint256
+  amountFromWei: String!
   account: Bytes! # address
   fundRound: BigInt! # uint256
   withdrawTimeStamp: BigInt! # uint256
+  withdrawDateTime: String!
   withdrawTxHash: Bytes! # address
   minFundGoal: BigInt! # uint256
+  minFundGoalFromWei: String!
   finalRaised: BigInt! # uint256
+  finalRaisedFromWei: String!
   fundRaisedSucceed:Boolean!
   succeedFundRound: BigInt! # uint256
+}
+
+type VintageFreeInEscrowFundEntity @entity{
+   id: ID!
+   daoAddr: Bytes! # address
+   newFundProposalId: Bytes! # bytes32
+   token: Bytes! # address
+   createTimeStamp: BigInt! # uint256
+   createDateTime: String!
+   amount: BigInt! # uint256
+   amountFromWei: String!
+   account: Bytes! # address
+   withdrawTimeStamp: BigInt! # uint256
+   withdrawDateTime: String!
+   withdrawTxHash: Bytes! # address
 }
 
 type VintageFundRoundStatistic @entity{
@@ -507,4 +529,30 @@ type VintageDaoSetProposal @entity{
   proposalType: BigInt! # uint256
   proposalTypeString: String!
   state: BigInt! # uint256
+}
+
+type VintageFundRaiseEntity @entity{
+  id:ID!
+  daoAddr: Bytes! # address
+  fundRaiseProposalId: Bytes! # bytes32
+  fundNumber: String!
+  tokenName: String!
+  raisedAmount: BigInt! # uint256
+  raisedAmountFromWei: String!
+  miniGoalAmount: BigInt! # uint256
+  miniGoalAmountFromWei: String!
+  maxGoalAmount: BigInt! # uint256
+  maxGoalAmountFromWei: String!
+  fundRaiseState: String!
+  fundRaiseStartTimestamp: BigInt! # uint256
+  fundRaiseStartDateTime: String!
+  fundRaiseEndTimestamp: BigInt! # uint256
+  fundRaiseEndDateTime: String!
+  fundStartTimestamp: BigInt! # uint256
+  fundStartDateTime: String!
+  fundEndTimestamp: BigInt! # uint256
+  fundEndDateTime: String!
+  fundInvested: BigInt! # uint256
+  fundInvestedFromWei: String!
+  fundedVentures: BigInt! # uint256
 }
