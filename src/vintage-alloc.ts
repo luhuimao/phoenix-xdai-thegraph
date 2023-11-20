@@ -12,6 +12,9 @@ import {
     VintageAllocationAdapterContract
 } from "../generated/VintageAllocationAdapterContract/VintageAllocationAdapterContract"
 import {
+    DaoRegistry
+} from "../generated/VintageAllocationAdapterContract/DaoRegistry";
+import {
     VintageFundingProposalInfo,
     VintageVestingEligibleUsers,
     VintageUserVestInfo
@@ -66,6 +69,56 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
 
             vintageUserVestInfo.save();
         }
+        const daoCont = DaoRegistry.bind(event.params.daoAddr);
+        const managementFeeAddr = daoCont.getAddressConfiguration(
+            Address.fromHexString("0x5460409b9aa4688f80c10b29c3d7ad16025f050f472a6882a45fa7bb9bd12fb1")
+        );
+        let vestInfo = allocContract.vestingInfos(
+            event.params.daoAddr,
+            event.params.proposalId,
+            managementFeeAddr
+        );
+        //payback token reward
+        if (vestInfo.getTokenAmount().gt(BigInt.fromI32(0))) {
+            let vintageUserVestInfo = VintageUserVestInfo.load(entity.proposalId.toHexString() + "-" + managementFeeAddr.toHexString());
+            if (!vintageUserVestInfo) {
+                vintageUserVestInfo = new VintageUserVestInfo(entity.proposalId.toHexString() + "-" + managementFeeAddr.toHexString());
+                vintageUserVestInfo.daoAddr = event.params.daoAddr;
+                vintageUserVestInfo.fundingProposalId = event.params.proposalId;
+                vintageUserVestInfo.recipient = managementFeeAddr;
+                vintageUserVestInfo.vestingStartTime = vestingStartTime;
+                vintageUserVestInfo.vestingCliffEndTime = vestingCliffEndTime;
+                vintageUserVestInfo.vestingInterval = vestingInterval;
+                vintageUserVestInfo.vestingEndTime = vestingEndTime;
+                vintageUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+                vintageUserVestInfo.created = false;
+                vintageUserVestInfo.save();
+            }
+        }
+
+        //proposer rewards
+        vestInfo = allocContract.vestingInfos(
+            event.params.daoAddr,
+            event.params.proposalId,
+            Address.fromBytes(vintageFundingProposalEntity.proposer)
+        );
+        if (vestInfo.getTokenAmount().gt(BigInt.fromI32(0))) {
+            let vintageUserVestInfo = VintageUserVestInfo.load(entity.proposalId.toHexString() + "-" + vintageFundingProposalEntity.proposer.toHexString());
+            if (!vintageUserVestInfo) {
+                vintageUserVestInfo = new VintageUserVestInfo(entity.proposalId.toHexString() + "-" + vintageFundingProposalEntity.proposer.toHexString());
+                vintageUserVestInfo.daoAddr = event.params.daoAddr;
+                vintageUserVestInfo.fundingProposalId = event.params.proposalId;
+                vintageUserVestInfo.recipient = vintageFundingProposalEntity.proposer;
+                vintageUserVestInfo.vestingStartTime = vestingStartTime;
+                vintageUserVestInfo.vestingCliffEndTime = vestingCliffEndTime;
+                vintageUserVestInfo.vestingInterval = vestingInterval;
+                vintageUserVestInfo.vestingEndTime = vestingEndTime;
+                vintageUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+                vintageUserVestInfo.created = false;
+                vintageUserVestInfo.save();
+            }
+        }
+
     }
 
 }

@@ -195,6 +195,8 @@ dataSources:
       abis:
         - name: VintageAllocationAdapterContract
           file: ./abis/VintageAllocationAdapterContract.json
+        - name: DaoRegistry
+          file: ./abis/DaoRegistry.json
       eventHandlers:
         - event: AllocateToken(address,bytes32,address,address[])
           handler: handleAllocateToken
