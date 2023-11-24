@@ -36,5 +36,5 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
         entity.daoType = "vintage";
     }
     // Entities can be written to the store with `.save()`
-    entity.save()
+    // entity.save()
 }

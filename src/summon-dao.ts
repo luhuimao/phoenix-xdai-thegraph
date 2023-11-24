@@ -33,7 +33,7 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     entity.daoType = "flex";
   }
   // Entities can be written to the store with `.save()`
-  entity.save()
+  // entity.save()
 
   // Note: If a handler doesn't require existing field values, it is faster
   // _not_ to load the entity from the store. Instead, create it fresh with

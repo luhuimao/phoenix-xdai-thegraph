@@ -11,6 +11,11 @@ type DaoEntiy @entity{
   createDateTime: String!
 }
 
+type DaoEntityCounter @entity{
+  id: ID!
+  count: BigInt! # uint256
+}
+
 type AllocateToken @entity {
   id: ID!
   proposalId: Bytes! # bytes32
@@ -265,6 +270,7 @@ type VintageUserVestInfo @entity{
   vestingInterval: BigInt! # uint256
   vestingEndTime: BigInt! # uint256
   totalAmount: BigInt! # uint256
+  totalAmountFromWei: String!
   created: Boolean!
 }
 

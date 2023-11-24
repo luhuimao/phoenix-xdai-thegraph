@@ -37,6 +37,7 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
             tem.push(event.params.lps[j].toHexString())
         }
     }
+
     entity.lps = tem;
     entity.save()
 
@@ -65,6 +66,7 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
             vintageUserVestInfo.vestingInterval = vestingInterval;
             vintageUserVestInfo.vestingEndTime = vestingEndTime;
             vintageUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+            vintageUserVestInfo.totalAmountFromWei = vintageUserVestInfo.totalAmount.div(BigInt.fromI64(10 ** 18)).toString();
             vintageUserVestInfo.created = false;
 
             vintageUserVestInfo.save();
@@ -91,6 +93,7 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
                 vintageUserVestInfo.vestingInterval = vestingInterval;
                 vintageUserVestInfo.vestingEndTime = vestingEndTime;
                 vintageUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+                vintageUserVestInfo.totalAmountFromWei = vintageUserVestInfo.totalAmount.div(BigInt.fromI64(10 ** 18)).toString();
                 vintageUserVestInfo.created = false;
                 vintageUserVestInfo.save();
             }
@@ -114,13 +117,12 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
                 vintageUserVestInfo.vestingInterval = vestingInterval;
                 vintageUserVestInfo.vestingEndTime = vestingEndTime;
                 vintageUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+                vintageUserVestInfo.totalAmountFromWei = vintageUserVestInfo.totalAmount.div(BigInt.fromI64(10 ** 18)).toString();
                 vintageUserVestInfo.created = false;
                 vintageUserVestInfo.save();
             }
         }
-
     }
-
 }
 
 export function handleConfigureDao(event: ConfigureDaoEvent): void { }
