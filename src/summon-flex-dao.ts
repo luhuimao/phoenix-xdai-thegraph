@@ -11,26 +11,38 @@ import {
   SummonDao,
   FlexDaoCreated
 } from "../generated/SummonDao/SummonDao"
-import { DaoEntiy } from "../generated/schema"
+import { DaoEntiy, FlexDaoEntity, FlexDaoEntityCounter } from "../generated/schema"
 
 export function handleFlexDaoCreated(event: FlexDaoCreated): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = DaoEntiy.load(event.params.name)
+  // let entity = DaoEntiy.load(event.params.name)
+  let flexDaoEntity = FlexDaoEntity.load(event.params.daoAddr.toHexString());
+  let counterEntity = FlexDaoEntityCounter.load(event.address.toHexString());
+
+  if (!counterEntity) {
+    counterEntity = new FlexDaoEntityCounter(event.address.toHexString());
+    counterEntity.count = BigInt.fromI32(0);
+  }
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new DaoEntiy(event.params.name);
+  if (!flexDaoEntity) {
+    flexDaoEntity = new FlexDaoEntity(event.params.daoAddr.toHexString());
+    // entity.daoType = "flex";
+    // entity.save()
 
-    entity.daoAddr = event.params.daoAddr;
-    entity.daoName = event.params.name;
-    entity.creator = event.params.creator;
-    entity.daoType = "flex";
-    entity.createTimeStamp = event.block.timestamp;
-    entity.createDateTime = new Date(event.block.timestamp.toI64() * 1000).toISOString();
-  } else {
-    entity.daoType = "flex";
+    flexDaoEntity.daoAddr = event.params.daoAddr;
+    flexDaoEntity.daoName = event.params.name;
+    flexDaoEntity.creator = event.params.creator;
+    flexDaoEntity.createTimeStamp = event.block.timestamp;
+    flexDaoEntity.createDateTime = new Date(event.block.timestamp.toI64() * 1000).toISOString();
+
+    flexDaoEntity.save();
+
+    counterEntity.count = counterEntity.count.plus(BigInt.fromI32(1));
+    counterEntity.save();
+
   }
   // Entities can be written to the store with `.save()`
   // entity.save()

@@ -11,30 +11,35 @@ import {
     SummonVintageDao,
     VintageDaoCreated
 } from "../generated/SummonVintageDao/SummonVintageDao"
-import { DaoEntiy } from "../generated/schema"
-
-
+import { DaoEntiy, VintageDaoEntity, VintageDaoEntityCounter } from "../generated/schema"
 
 export function handleVintageDaoCreated(event: VintageDaoCreated): void {
     // Entities can be loaded from the store using a string ID; this ID
     // needs to be unique across all entities of the same type
-    let entity = DaoEntiy.load(event.params.name)
-
+    let vintageDaoEntity = VintageDaoEntity.load(event.params.daoAddr.toHexString())
+    let counterEntity = VintageDaoEntityCounter.load(event.address.toHexString());
+    
+    if (!counterEntity) {
+        counterEntity = new VintageDaoEntityCounter(event.address.toHexString());
+        counterEntity.count = BigInt.fromI32(0);
+    }
     // Entities only exist after they have been saved to the store;
     // `null` checks allow to create entities on demand
-    if (!entity) {
-        entity = new DaoEntiy(event.params.name)
+    if (!vintageDaoEntity) {
+        vintageDaoEntity = new VintageDaoEntity(event.params.daoAddr.toHexString())
 
-        // Entity fields can be set based on event parameters
-        entity.daoAddr = event.params.daoAddr;
-        entity.daoName = event.params.name;
-        entity.creator = event.params.creator;
-        entity.daoType = "vintage";
-        entity.createTimeStamp = event.block.timestamp;
-        entity.createDateTime = new Date(event.block.timestamp.toI64() * 1000).toISOString();
+        // // Entity fields can be set based on event parameters
+        vintageDaoEntity.daoAddr = event.params.daoAddr;
+        vintageDaoEntity.daoName = event.params.name;
+        vintageDaoEntity.creator = event.params.creator;
+        vintageDaoEntity.createTimeStamp = event.block.timestamp;
+        vintageDaoEntity.createDateTime = new Date(event.block.timestamp.toI64() * 1000).toISOString();
+        vintageDaoEntity.save();
+
+        counterEntity.count = counterEntity.count.plus(BigInt.fromI32(1));
+        counterEntity.save();
     } else {
-        entity.daoType = "vintage";
+        // entity.daoType = "vintage";
     }
     // Entities can be written to the store with `.save()`
-    // entity.save()
 }

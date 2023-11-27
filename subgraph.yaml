@@ -289,7 +289,7 @@ dataSources:
       eventHandlers:
         - event: FlexDaoCreated(address,address,string,address)
           handler: handleFlexDaoCreated
-      file: ./src/summon-dao.ts
+      file: ./src/summon-flex-dao.ts
   - kind: ethereum
     name: SummonVintageDao
     network: xdai

@@ -11,7 +11,54 @@ type DaoEntiy @entity{
   createDateTime: String!
 }
 
+type FlexDaoEntity @entity(immutable: true){
+  id: ID!
+  daoAddr: Bytes! # address
+  daoName: String!
+  creator: Bytes! # address
+  createTimeStamp: BigInt!
+  createDateTime: String!
+  flexFundingProposalEntity: [FlexFundingProposal!] @derivedFrom(field: "flexDaoEntity")
+  flexStewardMangementProposal: [FlexStewardMangementProposal!] @derivedFrom(field: "flexDaoEntity")
+  flexPollVoting: [FlexPollVoting!] @derivedFrom(field: "flexDaoEntity")
+  flexVoting: [FlexVoting!] @derivedFrom(field: "flexDaoEntity")
+  flexDaosetProposal: [FlexDaosetProposal!] @derivedFrom(field: "flexDaoEntity")
+}
+
+type VintageDaoEntity @entity(immutable: true){
+  id: ID!
+  daoAddr: Bytes! # address
+  daoName: String!
+  creator: Bytes! # address
+  createTimeStamp: BigInt!
+  createDateTime: String!
+}
+
+type CollectiveDaoEntity @entity(immutable: true){
+  id: ID!
+  daoAddr: Bytes! # address
+  daoName: String!
+  creator: Bytes! # address
+  createTimeStamp: BigInt!
+  createDateTime: String!
+}
+
 type DaoEntityCounter @entity{
+  id: ID!
+  count: BigInt! # uint256
+}
+
+type FlexDaoEntityCounter @entity{
+  id: ID!
+  count: BigInt! # uint256
+}
+
+type VintageDaoEntityCounter @entity{
+  id: ID!
+  count: BigInt! # uint256
+}
+
+type CollectiveDaoEntityCounter @entity{
   id: ID!
   count: BigInt! # uint256
 }
@@ -28,6 +75,7 @@ type ConfigureDao @entity {
   gpAllocationBonusRadio: BigInt! # uint256
   riceStakeAllocationRadio: BigInt! # uint256
 }
+
 
 type FlexFundingProposal @entity{
   id: ID!
@@ -85,6 +133,7 @@ type FlexFundingProposal @entity{
   totalFund: BigInt! # uint256
   totalFundFromWei: String!
   investors: [String!]! # address[]
+  flexDaoEntity: FlexDaoEntity
 }
 
 type FlexVestEntity @entity {
@@ -120,6 +169,7 @@ type FlexStewardMangementProposal @entity{
   stateInString: String!
   type: BigInt! # uint256
   typeInString: String!
+  flexDaoEntity: FlexDaoEntity
 }
 
 type FlexPollVoting @entity{
@@ -132,6 +182,7 @@ type FlexPollVoting @entity{
   voter: Bytes! # address
   voteValue: BigInt! # uint256
   votingWeight: BigInt! # uint256
+  flexDaoEntity: FlexDaoEntity
 }
 
 type FlexVoting @entity{
@@ -144,6 +195,7 @@ type FlexVoting @entity{
   voter: Bytes! # address
   voteValue: BigInt! # uint256
   votingWeight: BigInt! # uint256
+  flexDaoEntity: FlexDaoEntity
 }
 
 type FlexProposalVoteInfo @entity{
@@ -223,6 +275,7 @@ type FlexDaosetProposal @entity{
   state: BigInt! # uint256
   creationTime: BigInt! # uint256
   createTimeString: String!
+  flexDaoEntity: FlexDaoEntity
 }
 
 type VintageNewFundProposal @entity{

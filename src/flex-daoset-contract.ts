@@ -12,10 +12,10 @@ import {
     ProposalCreated,
     ProposalProcessed
 } from "../generated/FlexDaoSetAdapterContract/FlexDaoSetAdapterContract"
-import {FlexDaoSetPollingAdapterContract} from "../generated/FlexDaoSetAdapterContract/FlexDaoSetPollingAdapterContract";
+import { FlexDaoSetPollingAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexDaoSetPollingAdapterContract";
 import { FlexDaoSetVotingAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexDaoSetVotingAdapterContract";
 import { DaoRegistry } from "../generated/FlexDaoSetAdapterContract/DaoRegistry";
-import { FlexDaosetProposal, FlexProposalVoteInfo,  } from "../generated/schema"
+import { FlexDaosetProposal, FlexProposalVoteInfo, } from "../generated/schema"
 
 export function handleProposalCreated(event: ProposalCreated): void {
     let entity = FlexDaosetProposal.load(event.params.proposalId.toHexString())
@@ -38,22 +38,22 @@ export function handleProposalCreated(event: ProposalCreated): void {
         case 0:
             entity.proposalTypeString = "PARTICIPANT_CAP";
             break;
-        case 1: 
+        case 1:
             entity.proposalTypeString = "GOVERNOR_MEMBERSHIP";
             break;
-        case 2: 
+        case 2:
             entity.proposalTypeString = "INVESTOR_MEMBERSHIP";
             break;
-        case 3: 
+        case 3:
             entity.proposalTypeString = "VOTING";
             break;
-        case 4: 
+        case 4:
             entity.proposalTypeString = "FEES";
             break;
-        case 5: 
+        case 5:
             entity.proposalTypeString = "PROPOSER_MEMBERHSIP";
             break;
-        case 6: 
+        case 6:
             entity.proposalTypeString = "POLL_FOR_INVESTMENT";
             break;
         default:
@@ -63,6 +63,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.state = BigInt.fromI32(0);
     entity.creationTime = event.block.timestamp;
     entity.createTimeString = new Date(event.block.timestamp.toI64() * 1000).toISOString();
+    entity.flexDaoEntity = event.params.daoAddr.toHexString();
     entity.save();
 }
 
@@ -81,31 +82,31 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                 proposalState = BigInt.fromI32(flexDaosetContract.investorCapProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
                 break;
-            case 1: 
+            case 1:
                 proposalState = BigInt.fromI32(flexDaosetContract.governorMembershipProposals(event.params.daoAddr,
-                event.params.proposalId).getState());
+                    event.params.proposalId).getState());
                 break;
-            case 2: 
+            case 2:
                 proposalState = BigInt.fromI32(flexDaosetContract.investorMembershipProposals(event.params.daoAddr,
-                event.params.proposalId).getState());    
-            break;
+                    event.params.proposalId).getState());
+                break;
             case 3:
                 proposalState = BigInt.fromI32(flexDaosetVotingContract.votingProposals(event.params.daoAddr,
-                event.params.proposalId).getState());    
-            break;
-            case 4: 
-            entity.proposalTypeString = "FEES";
+                    event.params.proposalId).getState());
+                break;
+            case 4:
+                entity.proposalTypeString = "FEES";
                 proposalState = BigInt.fromI32(flexDaosetContract.feesProposals(event.params.daoAddr,
-                event.params.proposalId).getState());    
-            break;
+                    event.params.proposalId).getState());
+                break;
             case 5:
                 proposalState = BigInt.fromI32(flexDaosetContract.proposerMembershipProposals(event.params.daoAddr,
-                event.params.proposalId).getState());
+                    event.params.proposalId).getState());
                 break;
-            case 6: 
+            case 6:
                 proposalState = BigInt.fromI32(flexDaosetPollingContract.pollForInvestmentProposals(event.params.daoAddr,
-                    event.params.proposalId).getState());    
-            break;
+                    event.params.proposalId).getState());
+                break;
             default:
                 proposalState = BigInt.fromI32(0);
                 break;

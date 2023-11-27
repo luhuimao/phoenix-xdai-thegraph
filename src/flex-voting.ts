@@ -41,6 +41,7 @@ export function handleSubmitVote(event: SubmitVote): void {
     entity.votedTimeStamp = event.params.votingTime;
     entity.votedDateTimeString = new Date(event.params.votingTime.toI64() * 1000).toISOString();
     entity.votingWeight = flexVoteContract.getVotingWeight(event.params.daoAddr, event.params.voter);
+    entity.flexDaoEntity = event.params.daoAddr.toHexString();
     // Entities can be written to the store with `.save()`
     entity.save()
 

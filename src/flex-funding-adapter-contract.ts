@@ -6,13 +6,15 @@
  * @LastEditors: huhuimao
  * @LastEditTime: 2023-10-07 13:35:12
  */
-import { BigInt, Bytes, Address } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes, Address } from "@graphprotocol/graph-ts";
+// import { toUtf8 } from "web3-utils";
 import {
     FlexFundingAdapterContract,
     ProposalCreated,
     ProposalExecuted
 } from "../generated/FlexFundingAdapterContract/FlexFundingAdapterContract"
 import { DaoRegistry } from "../generated/FlexFundingAdapterContract/DaoRegistry";
+import { DaoFactory } from "../generated/DaoFactory/DaoFactory";
 import { FlexInvestmentPoolAdapterContract } from "../generated/FlexInvestmentPoolAdapterContract/FlexInvestmentPoolAdapterContract";
 
 import { FlexFundingProposal, FlexDaoStatistic } from "../generated/schema"
@@ -21,6 +23,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     // Entities can be loaded from the store using a string ID; this ID
     // needs to be unique across all entities of the same type
     let entity = FlexFundingProposal.load(event.params.proposalId.toHexString())
+
 
     // Entities only exist after they have been saved to the store;
     // `null` checks allow to create entities on demand
@@ -89,6 +92,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.totalFund = BigInt.fromI32(0);
     entity.totalFundFromWei = "0";
     entity.investors = [];
+    entity.flexDaoEntity = event.params.daoAddress.toHexString();
     // Entities can be written to the store with `.save()`
     entity.save();
 }
