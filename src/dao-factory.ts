@@ -15,7 +15,7 @@ import {
 import { DaoEntiy, DaoEntityCounter } from "../generated/schema"
 
 export function handleDaoCreated(event: DAOCreated): void {
-    let entity = DaoEntiy.load(event.params._name);
+    let entity = DaoEntiy.load(event.params._address.toHexString());
     let counterEntity = DaoEntityCounter.load(event.address.toHexString());
 
     if (!counterEntity) {
@@ -26,7 +26,7 @@ export function handleDaoCreated(event: DAOCreated): void {
     // Entities only exist after they have been saved to the store;
     // `null` checks allow to create entities on demand
     if (!entity) {
-        entity = new DaoEntiy(event.params._name)
+        entity = new DaoEntiy(event.params._address.toHexString())
         entity.daoAddr = event.params._address;
         entity.daoName = event.params._name;
         entity.creator = event.params._creator;

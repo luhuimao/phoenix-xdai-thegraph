@@ -286,6 +286,12 @@ dataSources:
       abis:
         - name: SummonDao
           file: ./abis/SummonDao.json
+        - name: DaoRegistry
+          file: ./abis/DaoRegistry.json
+        - name: FlexInvestmentPoolAdapterContract
+          file: ./abis/FlexInvestmentPoolAdapterContract.json
+        - name: StewardManagementContract
+          file: ./abis/StewardManagementContract.json
       eventHandlers:
         - event: FlexDaoCreated(address,address,string,address)
           handler: handleFlexDaoCreated

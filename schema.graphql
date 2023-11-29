@@ -18,6 +18,11 @@ type FlexDaoEntity @entity(immutable: true){
   creator: Bytes! # address
   createTimeStamp: BigInt!
   createDateTime: String!
+  flexDaoVoteConfig: FlexDaoVoteConfigEntity
+  flexDaoPollVoterMembership: FlexDaoPollVoterMembershipEntity
+  flexDaoPriorityMembership: FlexDaoPriorityMembershipEntity
+  flexDaoInvestorMembership: FlexDaoInvestorMembershipEntity
+  flexDaoGovernorMembershipEntity: FlexDaoStewardMembershipEntity
   flexFundingProposalEntity: [FlexFundingProposal!] @derivedFrom(field: "flexDaoEntity")
   flexStewardMangementProposal: [FlexStewardMangementProposal!] @derivedFrom(field: "flexDaoEntity")
   flexPollVoting: [FlexPollVoting!] @derivedFrom(field: "flexDaoEntity")
@@ -76,6 +81,66 @@ type ConfigureDao @entity {
   riceStakeAllocationRadio: BigInt! # uint256
 }
 
+type FlexDaoStewardMembershipEntity @entity {
+  id: ID!
+  bool: Boolean
+  varifyType: BigInt
+  minHolding: BigInt
+  tokenAddress: Bytes
+  tokenId: BigInt
+  whiteList: [String!]
+  flexDaoEntity: FlexDaoEntity
+}
+
+type FlexDaoPriorityMembershipEntity @entity {
+  id: ID!
+  daoAddr: Bytes! # address
+  varifyType: BigInt
+  minHolding: BigInt
+  tokenAddress: Bytes
+  tokenId: BigInt
+  whiteList: [String!]
+  priorityPeriod: BigInt
+  flexDaoEntity: FlexDaoEntity
+}
+
+type FlexDaoPollVoterMembershipEntity @entity{
+  id: ID!
+  daoAddr: Bytes! # address
+  memberShipName: String
+  type: BigInt # uint256
+  contractAddr: Bytes # address
+  tokenId: BigInt # uint256
+  miniHoldingAmount: BigInt # uint256
+  flexDaoEntity: FlexDaoEntity
+}
+
+type FlexDaoInvestorMembershipEntity @entity{
+  id: ID!
+  daoAddr: Bytes! # address
+  name: String
+  varifyType: BigInt
+  minHolding: BigInt
+  tokenAddress: Bytes
+  tokenId: BigInt
+  whiteList: [String!] # address[]
+  flexDaoEntity: FlexDaoEntity
+}
+
+type FlexDaoVoteConfigEntity @entity{
+  id: ID!
+  daoAddr: Bytes! # address
+  votingAsset: BigInt
+  weightAlgorithm: BigInt
+  contractAddr: Bytes
+  tokenId: BigInt
+  supportType: BigInt
+  quorumType: BigInt
+  support: BigInt
+  quorum: BigInt
+  votingPeriod: BigInt
+  flexDaoEntity: FlexDaoEntity
+}
 
 type FlexFundingProposal @entity{
   id: ID!
@@ -160,6 +225,7 @@ type FlexStewardMangementProposal @entity{
   id: ID!
   daoAddr: Bytes! # address
   proposalId: Bytes!
+  propopser: Bytes!
   stewardAddress: Bytes! # address
   creationTime: BigInt! # uint256
   createTimeString: String!

@@ -18,7 +18,13 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
     // needs to be unique across all entities of the same type
     let vintageDaoEntity = VintageDaoEntity.load(event.params.daoAddr.toHexString())
     let counterEntity = VintageDaoEntityCounter.load(event.address.toHexString());
-    
+    let entity = DaoEntiy.load(event.params.daoAddr.toHexString());
+
+    if (entity) {
+        entity.daoType = "vintage";
+        entity.save();
+    }
+
     if (!counterEntity) {
         counterEntity = new VintageDaoEntityCounter(event.address.toHexString());
         counterEntity.count = BigInt.fromI32(0);
@@ -38,8 +44,5 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
 
         counterEntity.count = counterEntity.count.plus(BigInt.fromI32(1));
         counterEntity.save();
-    } else {
-        // entity.daoType = "vintage";
     }
-    // Entities can be written to the store with `.save()`
 }

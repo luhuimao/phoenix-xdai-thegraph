@@ -28,10 +28,10 @@ export function handleProposalCreated(event: ProposalCreated): void {
     }
 
     // BigInt and BigDecimal math are supported
-
     // Entity fields can be set based on event parameters
     entity.daoAddr = event.params.daoAddr;
     entity.proposalId = event.params.proposalId;
+    entity.propopser = event.transaction.from;
     // entity.proposalIdUTF8String = ethers.toUtf8String(event.params.proposalId);
     entity.daoAddr = event.params.daoAddr;
     entity.stewardAddress = event.params.account;
@@ -48,13 +48,6 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.save()
 
 }
-
-// enum ProposalState {
-//     Voting,
-//     Executing,
-//     Done,
-//     Failed
-// }
 
 
 export function handleProposalProcessed(event: ProposalProcessed): void {
