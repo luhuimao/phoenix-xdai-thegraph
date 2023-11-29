@@ -22,8 +22,11 @@ type FlexDaoEntity @entity(immutable: true){
   flexDaoPollVoterMembership: FlexDaoPollVoterMembershipEntity
   flexDaoPriorityMembership: FlexDaoPriorityMembershipEntity
   flexDaoInvestorMembership: FlexDaoInvestorMembershipEntity
-  flexDaoGovernorMembershipEntity: FlexDaoStewardMembershipEntity
-  flexFundingProposalEntity: [FlexFundingProposal!] @derivedFrom(field: "flexDaoEntity")
+  flexDaoGovernorMembership: FlexDaoStewardMembershipEntity
+  flexDaoFeeInfo: FlexDaoFeeInfoEntity
+  flexDaoPollingInfo: FlexDaoPollingInfoEntity
+  flexDaoInvestorCapacity: FlexDaoInvestorCapacityEntity
+  flexFundingProposal: [FlexFundingProposal!] @derivedFrom(field: "flexDaoEntity")
   flexStewardMangementProposal: [FlexStewardMangementProposal!] @derivedFrom(field: "flexDaoEntity")
   flexPollVoting: [FlexPollVoting!] @derivedFrom(field: "flexDaoEntity")
   flexVoting: [FlexVoting!] @derivedFrom(field: "flexDaoEntity")
@@ -81,9 +84,40 @@ type ConfigureDao @entity {
   riceStakeAllocationRadio: BigInt! # uint256
 }
 
+type FlexDaoPollingInfoEntity @entity {
+  id: ID!
+  daoAddr: Bytes! # address
+  enable: Boolean
+  votingPeriod: BigInt
+  votingPower: BigInt
+  support: BigInt
+  quorum: BigInt
+  votingAssetType: BigInt
+  tokenAddress: Bytes
+  tokenID: BigInt
+  flexDaoEntity: FlexDaoEntity
+} 
+
+type FlexDaoInvestorCapacityEntity @entity{
+  id: ID!
+  daoAddr: Bytes! # address
+  enable: Boolean
+  capacityAmount: BigInt
+  flexDaoEntity: FlexDaoEntity
+}
+
+type FlexDaoFeeInfoEntity @entity{
+  id: ID!
+  daoAddr: Bytes! # address
+  managementFee: BigInt
+  payTokenManagementFee: BigInt
+  feeReceiver: Bytes
+  flexDaoEntity: FlexDaoEntity
+}
+
 type FlexDaoStewardMembershipEntity @entity {
   id: ID!
-  bool: Boolean
+  enable: Boolean
   varifyType: BigInt
   minHolding: BigInt
   tokenAddress: Bytes

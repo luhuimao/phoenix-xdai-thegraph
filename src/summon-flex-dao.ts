@@ -22,7 +22,10 @@ import {
   FlexDaoVoteConfigEntity,
   FlexDaoPriorityMembershipEntity,
   FlexDaoInvestorMembershipEntity,
-  FlexDaoStewardMembershipEntity
+  FlexDaoStewardMembershipEntity,
+  FlexDaoFeeInfoEntity,
+  FlexDaoPollingInfoEntity,
+  FlexDaoInvestorCapacityEntity
 } from "../generated/schema"
 // import { fromAscii } from "web3-utils";
 // import { sha3 } from "web3-utils";
@@ -38,6 +41,9 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
   let flexDaoPriorityMembershipEntity = FlexDaoPriorityMembershipEntity.load(event.params.daoAddr.toHexString());
   let flexDaoInvestorMembershipEntity = FlexDaoInvestorMembershipEntity.load(event.params.daoAddr.toHexString());
   let flexDaoStewardMembershipEntity = FlexDaoStewardMembershipEntity.load(event.params.daoAddr.toHexString());
+  let flexDaoFeeInfoEntity = FlexDaoFeeInfoEntity.load(event.params.daoAddr.toHexString());
+  let flexDaoPollingInfoEntity = FlexDaoPollingInfoEntity.load(event.params.daoAddr.toHexString());
+  let flexDaoInvestorCapacityEntity = FlexDaoInvestorCapacityEntity.load(event.params.daoAddr.toHexString());
   const daoContract = DaoRegistry.bind(event.params.daoAddr);
 
   if (!counterEntity) {
@@ -65,6 +71,11 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     flexDaoEntity.flexDaoVoteConfig = event.params.daoAddr.toHexString();
     flexDaoEntity.flexDaoPollVoterMembership = event.params.daoAddr.toHexString();
     flexDaoEntity.flexDaoPriorityMembership = event.params.daoAddr.toHexString();
+    flexDaoEntity.flexDaoGovernorMembership = event.params.daoAddr.toHexString();
+    flexDaoEntity.flexDaoInvestorMembership = event.params.daoAddr.toHexString();
+    flexDaoEntity.flexDaoInvestorCapacity = event.params.daoAddr.toHexString();
+    flexDaoEntity.flexDaoPollingInfo = event.params.daoAddr.toHexString();
+    flexDaoEntity.flexDaoFeeInfo = event.params.daoAddr.toHexString();
     flexDaoEntity.save();
 
     counterEntity.count = counterEntity.count.plus(BigInt.fromI32(1));
@@ -199,7 +210,7 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
       }
     }
 
-    flexDaoStewardMembershipEntity.bool = FLEX_GOVERNOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
+    flexDaoStewardMembershipEntity.enable = FLEX_GOVERNOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
     flexDaoStewardMembershipEntity.varifyType = FLEX_GOVERNOR_MEMBERSHIP_TYPE;
     flexDaoStewardMembershipEntity.minHolding = FLEX_GOVERNOR_MEMBERSHIP_MINI_HOLDING;
     flexDaoStewardMembershipEntity.tokenAddress = FLEX_GOVERNOR_MEMBERSHIP_TOKEN_ADDRESS;
@@ -208,6 +219,59 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     flexDaoStewardMembershipEntity.flexDaoEntity = event.params.daoAddr.toHexString();
 
     flexDaoStewardMembershipEntity.save();
+  }
+
+  if (!flexDaoFeeInfoEntity) {
+    flexDaoFeeInfoEntity = new FlexDaoFeeInfoEntity(event.params.daoAddr.toHexString());
+    const FLEX_MANAGEMENT_FEE_AMOUNT = daoContract.getConfiguration(Bytes.fromHexString("0x64c49ee5084f4940c312104c41603e43791b03dad28152afd6eadb5b960a8a87"));
+    const FLEX_RETURN_TOKEN_MANAGEMENT_FEE_AMOUNT = daoContract.getConfiguration(Bytes.fromHexString("0xea659d8e1a730b10af1cecb4f8ee391adf80e75302d6aaeb9642dc8a4a5e5dbb"));
+    const FLEX_MANAGEMENT_FEE_RECEIVE_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0x8987d08c67963e4cacd5e5936c122a968c66853d58299dd822c1942227109839"));
+
+    flexDaoFeeInfoEntity.daoAddr = event.params.daoAddr;
+    flexDaoFeeInfoEntity.feeReceiver = FLEX_MANAGEMENT_FEE_RECEIVE_ADDRESS;
+    flexDaoFeeInfoEntity.flexDaoEntity = event.params.daoAddr.toHexString();
+    flexDaoFeeInfoEntity.managementFee = FLEX_MANAGEMENT_FEE_AMOUNT;
+    flexDaoFeeInfoEntity.payTokenManagementFee = FLEX_RETURN_TOKEN_MANAGEMENT_FEE_AMOUNT;
+    flexDaoFeeInfoEntity.save();
+  }
+
+  if (!flexDaoInvestorCapacityEntity) {
+    flexDaoInvestorCapacityEntity = new FlexDaoInvestorCapacityEntity(event.params.daoAddr.toHexString());
+
+    const MAX_INVESTORS_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0x69f4ffb3ebcb7809550bddd3e4d449a47e737bf6635bc7a730996643997b0e48"));
+    const MAX_INVESTORS = daoContract.getConfiguration(Bytes.fromHexString("0xecbde689cc6337d29a750b8b8a8abbfa97427b4ac800ab55be2f2c87311510f2"));
+
+    flexDaoInvestorCapacityEntity.daoAddr = event.params.daoAddr
+    flexDaoInvestorCapacityEntity.enable = MAX_INVESTORS_ENABLE == BigInt.fromI32(1) ? true : false;
+    flexDaoInvestorCapacityEntity.capacityAmount = MAX_INVESTORS;
+    flexDaoInvestorCapacityEntity.flexDaoEntity = event.params.daoAddr.toHexString();
+    flexDaoInvestorCapacityEntity.save();
+  }
+
+  if (!flexDaoPollingInfoEntity) {
+    flexDaoPollingInfoEntity = new FlexDaoPollingInfoEntity(event.params.daoAddr.toHexString());
+
+    const FLEX_POLLING_VOTING_PERIOD = daoContract.getConfiguration(Bytes.fromHexString("0xee63cc82ca6990a4cc5fa3ca10d8a5281ae1758a8d8f22892c4badb7cacd111e"));
+    const FLEX_POLLING_VOTING_POWER = daoContract.getConfiguration(Bytes.fromHexString("0xcfe20936b2b01e130d3cdf28f04cbdf5f0721a7c9092d9ca7a9e189d87dd82e2"));
+    const FLEX_POLLING_SUPER_MAJORITY = daoContract.getConfiguration(Bytes.fromHexString("0x777270e51451e60c2ce5118fc8e5844441dcc4d102e9052e60fb41312dbb848a"));
+    const FLEX_POLLING_QUORUM = daoContract.getConfiguration(Bytes.fromHexString("0x7789eea44dccd66529026559d1b36215cb5766016b41a8a8f16e08b2ec875837"));
+    const FLEX_POLL_VOTING_WEIGHTED_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x18ccfaf5deb9f2b0bd666344fa9c46950fbcee85fbfd05c3959876dfe502c209"));
+    const FLEX_POLL_VOTING_ASSET_TOKEN_ID = daoContract.getConfiguration(Bytes.fromHexString("0x4e640b0dd9bf7618f23df95b8d516df2ff38868970d2d109c5b4b0455980659f"));
+    const FLEX_POLL_VOTING_ASSET_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xa23a2786abcf8c551ce7fba1966ec456144d9caa0db070879d03a4ea4fd9b2fd"));
+    const FLEX_INVESTMENT_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x16560c56ab40c59c6ee21567e40e89d9059e8d1c5df75d3b95b38ff375501823"));
+
+
+    flexDaoPollingInfoEntity.daoAddr = event.params.daoAddr;
+    flexDaoPollingInfoEntity.enable = FLEX_INVESTMENT_TYPE == BigInt.fromI32(1) ? true : false;
+    flexDaoPollingInfoEntity.flexDaoEntity = event.params.daoAddr.toHexString();
+    flexDaoPollingInfoEntity.votingPower = FLEX_POLLING_VOTING_POWER;
+    flexDaoPollingInfoEntity.votingPeriod = FLEX_POLLING_VOTING_PERIOD;
+    flexDaoPollingInfoEntity.votingAssetType = FLEX_POLL_VOTING_WEIGHTED_TYPE;
+    flexDaoPollingInfoEntity.tokenID = FLEX_POLL_VOTING_ASSET_TOKEN_ID;
+    flexDaoPollingInfoEntity.tokenAddress = FLEX_POLL_VOTING_ASSET_TOKEN_ADDRESS;
+    flexDaoPollingInfoEntity.support = FLEX_POLLING_SUPER_MAJORITY;
+    flexDaoPollingInfoEntity.quorum = FLEX_POLLING_QUORUM;
+    flexDaoPollingInfoEntity.save();
   }
 }
 
