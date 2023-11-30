@@ -43,7 +43,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
             break;
     }
     entity.state = BigInt.fromI32(0);
-
+    entity.vintageDaoEntity = event.params.daoAddr.toHexString();
     entity.save();
 }
 

@@ -17,7 +17,8 @@ import {
     VintageNewFundProposal,
     VintageProposalVoteInfo,
     VintageFundRoundToNewFundProposalId,
-    VintageFundRaiseEntity
+    VintageFundRaiseEntity,
+    VintageDaoFeeInfoEntity
 } from "../generated/schema"
 
 export function handleProposalCreated(event: ProposalCreated): void {
@@ -64,6 +65,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
         entity.fundEndTime = BigInt.fromI32(0);
         entity.totalFund = BigInt.fromI32(0);
         entity.totalFundFromWei = "0";
+        entity.vintageDaoEntity = event.params.daoAddr.toHexString();
 
         entity.save()
 
@@ -115,6 +117,20 @@ export function handleProposalExecuted(event: proposalExecuted): void {
             roundPropossalEntity.fundRound = fundRound;
             roundPropossalEntity.proposalId = event.params.proposalId;
             roundPropossalEntity.save();
+
+            let vintageDaoFeeInfoEntity = VintageDaoFeeInfoEntity.load(event.params.daoAddr.toHexString());
+            if (!vintageDaoFeeInfoEntity) {
+                vintageDaoFeeInfoEntity = new VintageDaoFeeInfoEntity(event.params.daoAddr.toHexString());
+                vintageDaoFeeInfoEntity.daoAddr = event.params.daoAddr;
+                vintageDaoFeeInfoEntity.vintageDaoEntity = event.params.daoAddr.toHexString();
+            }
+            vintageDaoFeeInfoEntity.feeReceiver = entity.managementFeeAddress;
+            vintageDaoFeeInfoEntity.managementFee = entity.managementFeeRatio;
+            vintageDaoFeeInfoEntity.payTokenManagementFee = entity.returnTokenManagementFeeRatio;
+            vintageDaoFeeInfoEntity.proposerPaybackTokenReward = entity.projectTokenFromInvestor;
+            vintageDaoFeeInfoEntity.proposerReward = entity.fundFromInverstor;
+            vintageDaoFeeInfoEntity.redemptionFee = entity.redepmtFeeRatio;
+            vintageDaoFeeInfoEntity.save();
         }
         entity.save();
 

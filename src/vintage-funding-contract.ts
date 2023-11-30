@@ -14,10 +14,10 @@ import {
 } from "../generated/VintageFundingAdapterContract/VintageFundingAdapterContract";
 import { VintageFundRaiseAdapterContract } from "../generated/VintageFundRaiseAdapterContract/VintageFundRaiseAdapterContract";
 import { DaoRegistry } from "../generated/VintageFundingAdapterContract/DaoRegistry";
-import { 
-    VintageFundingProposalInfo, 
-    VintageFundRoundToNewFundProposalId, 
-    VintageDaoStatistic, 
+import {
+    VintageFundingProposalInfo,
+    VintageFundRoundToNewFundProposalId,
+    VintageDaoStatistic,
     VintageProposalVoteInfo,
     VintageFundRoundStatistic,
     VintageFundRaiseEntity
@@ -70,7 +70,7 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
     entity.proposalStopVotingTimestamp = vintageFundingProposalInfo.getProposalTimeInfo().proposalStopVotingTimestamp;
     entity.proposalExecuteTimestamp = vintageFundingProposalInfo.getProposalTimeInfo().proposalExecuteTimestamp;
     entity.createDateTime = new Date(event.block.timestamp.toI64() * 1000).toISOString();
-
+    entity.vintageDaoEntity = event.params.daoAddr.toHexString();
     entity.save()
 }
 
@@ -120,7 +120,7 @@ export function handleProposalExecuted(event: ProposalExecutedEvent): void {
         const fundRaiseContract = VintageFundRaiseAdapterContract.bind(fundRaiseAddress);
         const currentFundRound = fundRaiseContract.createdFundCounter(event.params.daoAddr);
 
-       
+
         if (proposalEntity.state == BigInt.fromI32(3)) {
             let fundRoundEntity = VintageFundRoundStatistic.load(event.params.daoAddr.toString() + currentFundRound.toString());
             if (fundRoundEntity) {
@@ -133,11 +133,11 @@ export function handleProposalExecuted(event: ProposalExecutedEvent): void {
             if (roundProposalIdEntity) {
                 const newFundProposalId = roundProposalIdEntity.proposalId;
                 let fundRaiseEntity = VintageFundRaiseEntity.load(roundProposalIdEntity.proposalId.toHexString());
-                if(fundRaiseEntity){
+                if (fundRaiseEntity) {
                     fundRaiseEntity.fundInvested = fundRaiseEntity.fundInvested.plus(proposalEntity.fundingAmount);
                     fundRaiseEntity.fundInvestedFromWei = fundRaiseEntity.fundInvested.div(BigInt.fromI64(10 ** 18)).toString();
                     fundRaiseEntity.fundedVentures = fundRaiseEntity.fundedVentures.plus(BigInt.fromI32(1));
-        
+
                     fundRaiseEntity.save();
                 }
             }

@@ -312,6 +312,12 @@ dataSources:
       abis:
         - name: SummonVintageDao
           file: ./abis/SummonVintageDao.json
+        - name: DaoRegistry
+          file: ./abis/DaoRegistry.json
+        - name: VintageFundingPoolAdapterContract
+          file: ./abis/VintageFundingPoolAdapterContract.json
+        - name: VintageRaiserManagementContract
+          file: ./abis/VintageRaiserManagementContract.json
       eventHandlers:
         - event: VintageDaoCreated(address,address,string,address)
           handler: handleVintageDaoCreated
