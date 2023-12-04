@@ -66,6 +66,7 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
         vintageDaoEntity.vintageInvestorMembership = event.params.daoAddr.toHexString();
         vintageDaoEntity.vintageVotingConfigInfo = event.params.daoAddr.toHexString();
         vintageDaoEntity.vintageDaoFeeInfo = event.params.daoAddr.toHexString();
+        vintageDaoEntity.vintageVoting = event.params.daoAddr.toHexString();
         vintageDaoEntity.save();
 
         counterEntity.count = counterEntity.count.plus(BigInt.fromI32(1));

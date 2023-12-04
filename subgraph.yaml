@@ -292,6 +292,8 @@ dataSources:
           file: ./abis/FlexInvestmentPoolAdapterContract.json
         - name: StewardManagementContract
           file: ./abis/StewardManagementContract.json
+        - name: FlexFundingAdapterContract
+          file: ./abis/FlexFundingAdapterContract.json
       eventHandlers:
         - event: FlexDaoCreated(address,address,string,address)
           handler: handleFlexDaoCreated
@@ -326,9 +328,9 @@ dataSources:
     name: FlexFundingAdapterContract
     network: xdai
     source:
-      address: "0x61aF1deD43DF38DbCAd71734309F57c16135247a"
+      address: "0x2fac4d325465c61e0c7b7d83207ae29e8bb53efb"
       abi: FlexFundingAdapterContract
-      startBlock: 30923590
+      startBlock: 31218222
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -440,9 +442,9 @@ dataSources:
     name: FlexInvestmentPoolAdapterContract
     network: xdai
     source:
-      address: "0x6Dc4901a04CF6E9C7B93415BC586D189AE5a1175"
+      address: "0xe45cb8d9772dc5e38a64f75eb6f9e0876e9d9cfe"
       abi: FlexInvestmentPoolAdapterContract
-      startBlock: 30923597
+      startBlock: 31265930
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -460,6 +462,8 @@ dataSources:
           handler: handleDeposit
         - event: WithDraw(address,bytes32,uint256,address)
           handler: handleWithDraw
+        - event: InvestorMembershipCreated(address,string,bytes32)
+          handler: handleInvestorMembershipCreated
       file: ./src/flex-funding-pool.ts
   - kind: ethereum
     name: FlexAllocationAdapterContract

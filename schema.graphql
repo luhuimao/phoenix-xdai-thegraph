@@ -23,6 +23,7 @@ type FlexDaoEntity @entity(immutable: true){
   flexDaoPriorityMembership: FlexDaoPriorityMembershipEntity
   flexDaoInvestorMembership: FlexDaoInvestorMembershipEntity
   flexDaoGovernorMembership: FlexDaoStewardMembershipEntity
+  flexDaoProposerMembership: FlexDaoProposerMembershipEntity
   flexDaoFeeInfo: FlexDaoFeeInfoEntity
   flexDaoPollingInfo: FlexDaoPollingInfoEntity
   flexDaoInvestorCapacity: FlexDaoInvestorCapacityEntity
@@ -106,6 +107,19 @@ type FlexDaoFeeInfoEntity @entity{
   flexDaoEntity: FlexDaoEntity
 }
 
+type FlexDaoProposerMembershipEntity @entity{
+  id: ID!
+  daoAddr: Bytes! # address
+  proposerMembershipEnable: Boolean
+  varifyType: BigInt
+  minHolding: BigInt
+  tokenAddress: Bytes
+  tokenId: BigInt
+  whiteList: [String!]
+  flexDaoEntity: FlexDaoEntity
+
+}
+
 type FlexDaoStewardMembershipEntity @entity {
   id: ID!
   enable: Boolean
@@ -142,6 +156,7 @@ type FlexDaoPollVoterMembershipEntity @entity{
 
 type FlexDaoInvestorMembershipEntity @entity{
   id: ID!
+  enable: Boolean
   daoAddr: Bytes! # address
   name: String
   varifyType: BigInt
@@ -385,6 +400,7 @@ type VintageDaoEntity @entity(immutable: true){
   vintageGovernorMembership: VintageGovernorMembershipEntity
   vintageVotingConfigInfo: VintageVotingInfoEntity
   vintageDaoFeeInfo: VintageDaoFeeInfoEntity
+  vintageVoting: VintageVoting
 }
 
 type VintageDaoFeeInfoEntity @entity{
@@ -594,6 +610,7 @@ type VintageVoting @entity{
   votedDateTimeString: String!
   voter: Bytes! # address
   voteValue: BigInt! # uint256
+  vintageDaoEntity: VintageDaoEntity
 }
 
 type VintageInvestorBalance @entity{
