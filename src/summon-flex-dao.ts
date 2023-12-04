@@ -74,7 +74,7 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     flexDaoEntity.flexDaoPollVoterMembership = event.params.daoAddr.toHexString();
     flexDaoEntity.flexDaoPriorityMembership = event.params.daoAddr.toHexString();
     flexDaoEntity.flexDaoGovernorMembership = event.params.daoAddr.toHexString();
-    flexDaoEntity.flexDaoInvestorMembership = event.params.daoAddr.toHexString();
+    // flexDaoEntity.flexDaoInvestorMembership = event.params.daoAddr.toHexString();
     flexDaoEntity.flexDaoProposerMembership = event.params.daoAddr.toHexString();
     flexDaoEntity.flexDaoInvestorCapacity = event.params.daoAddr.toHexString();
     flexDaoEntity.flexDaoPollingInfo = event.params.daoAddr.toHexString();

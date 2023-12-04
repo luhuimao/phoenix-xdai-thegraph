@@ -21,7 +21,6 @@ type FlexDaoEntity @entity(immutable: true){
   flexDaoVoteConfig: FlexDaoVoteConfigEntity
   flexDaoPollVoterMembership: FlexDaoPollVoterMembershipEntity
   flexDaoPriorityMembership: FlexDaoPriorityMembershipEntity
-  flexDaoInvestorMembership: FlexDaoInvestorMembershipEntity
   flexDaoGovernorMembership: FlexDaoStewardMembershipEntity
   flexDaoProposerMembership: FlexDaoProposerMembershipEntity
   flexDaoFeeInfo: FlexDaoFeeInfoEntity
@@ -32,6 +31,8 @@ type FlexDaoEntity @entity(immutable: true){
   flexPollVoting: [FlexPollVoting!] @derivedFrom(field: "flexDaoEntity")
   flexVoting: [FlexVoting!] @derivedFrom(field: "flexDaoEntity")
   flexDaosetProposal: [FlexDaosetProposal!] @derivedFrom(field: "flexDaoEntity")
+  flexDaoInvestorMembership: [FlexDaoInvestorMembershipEntity!] @derivedFrom(field: "flexDaoEntity")
+
 }
 
 type CollectiveDaoEntity @entity(immutable: true){

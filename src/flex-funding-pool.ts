@@ -191,9 +191,9 @@ export function handleWithDraw(event: WithDraw): void {
 }
 
 export function handleInvestorMembershipCreated(event: InvestorMembershipCreated): void {
-    let flexDaoInvestorMembershipEntity = FlexDaoInvestorMembershipEntity.load(event.params.daoAddress.toHexString());
+    let flexDaoInvestorMembershipEntity = FlexDaoInvestorMembershipEntity.load(event.params.daoAddress.toHexString() + event.params.name);
     if (!flexDaoInvestorMembershipEntity) {
-        flexDaoInvestorMembershipEntity = new FlexDaoInvestorMembershipEntity(event.params.daoAddress.toHexString());
+        flexDaoInvestorMembershipEntity = new FlexDaoInvestorMembershipEntity(event.params.daoAddress.toHexString() + event.params.name);
         const daoContract = DaoRegistry.bind(event.params.daoAddress);
 
         const contractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x2207fd6117465cefcba0abc867150698c0464aa41a293ec29ca01b67a6350c3c"));
