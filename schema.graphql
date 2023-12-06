@@ -23,6 +23,7 @@ type FlexDaoEntity @entity(immutable: true){
   flexDaoPriorityMembership: FlexDaoPriorityMembershipEntity
   flexDaoGovernorMembership: FlexDaoStewardMembershipEntity
   flexDaoProposerMembership: FlexDaoProposerMembershipEntity
+  flexDaoInvestorMembership: FlexDaoInvestorMembershipEntity
   flexDaoFeeInfo: FlexDaoFeeInfoEntity
   flexDaoPollingInfo: FlexDaoPollingInfoEntity
   flexDaoInvestorCapacity: FlexDaoInvestorCapacityEntity
@@ -31,8 +32,6 @@ type FlexDaoEntity @entity(immutable: true){
   flexPollVoting: [FlexPollVoting!] @derivedFrom(field: "flexDaoEntity")
   flexVoting: [FlexVoting!] @derivedFrom(field: "flexDaoEntity")
   flexDaosetProposal: [FlexDaosetProposal!] @derivedFrom(field: "flexDaoEntity")
-  flexDaoInvestorMembership: [FlexDaoInvestorMembershipEntity!] @derivedFrom(field: "flexDaoEntity")
-
 }
 
 type CollectiveDaoEntity @entity(immutable: true){
@@ -147,7 +146,6 @@ type FlexDaoPriorityMembershipEntity @entity {
 type FlexDaoPollVoterMembershipEntity @entity{
   id: ID!
   daoAddr: Bytes! # address
-  memberShipName: String
   type: BigInt # uint256
   contractAddr: Bytes # address
   tokenId: BigInt # uint256
@@ -159,7 +157,6 @@ type FlexDaoInvestorMembershipEntity @entity{
   id: ID!
   enable: Boolean
   daoAddr: Bytes! # address
-  name: String
   varifyType: BigInt
   minHolding: BigInt
   tokenAddress: Bytes

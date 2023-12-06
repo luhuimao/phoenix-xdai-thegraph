@@ -190,37 +190,37 @@ export function handleWithDraw(event: WithDraw): void {
     // FlexDaoStatisticsEntity.save();
 }
 
-export function handleInvestorMembershipCreated(event: InvestorMembershipCreated): void {
-    let flexDaoInvestorMembershipEntity = FlexDaoInvestorMembershipEntity.load(event.params.daoAddress.toHexString() + event.params.name);
-    if (!flexDaoInvestorMembershipEntity) {
-        flexDaoInvestorMembershipEntity = new FlexDaoInvestorMembershipEntity(event.params.daoAddress.toHexString() + event.params.name);
-        const daoContract = DaoRegistry.bind(event.params.daoAddress);
+// export function handleInvestorMembershipCreated(event: InvestorMembershipCreated): void {
+//     let flexDaoInvestorMembershipEntity = FlexDaoInvestorMembershipEntity.load(event.params.daoAddress.toHexString() + event.params.name);
+//     if (!flexDaoInvestorMembershipEntity) {
+//         flexDaoInvestorMembershipEntity = new FlexDaoInvestorMembershipEntity(event.params.daoAddress.toHexString() + event.params.name);
+//         const daoContract = DaoRegistry.bind(event.params.daoAddress);
 
-        const contractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x2207fd6117465cefcba0abc867150698c0464aa41a293ec29ca01b67a6350c3c"));
-        const flexInvestmentPoolAdapterContract = FlexInvestmentPoolAdapterContract.bind(contractAddr);
+//         const contractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x2207fd6117465cefcba0abc867150698c0464aa41a293ec29ca01b67a6350c3c"));
+//         const flexInvestmentPoolAdapterContract = FlexInvestmentPoolAdapterContract.bind(contractAddr);
 
-        const FLEX_INVESTOR_MEMBERSHIP_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0xfeddffed075d0686e697569ece0ce2fd26bfbbb18719086f36d16c7117edb553"));
-        const rel = flexInvestmentPoolAdapterContract.investorMemberShips(event.params.daoAddress, event.params.hashName);
-        const whitelist = flexInvestmentPoolAdapterContract.getParticipanWhitelist(event.params.daoAddress, event.params.name);
-        let tem: string[] = [];
+//         const FLEX_INVESTOR_MEMBERSHIP_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0xfeddffed075d0686e697569ece0ce2fd26bfbbb18719086f36d16c7117edb553"));
+//         const rel = flexInvestmentPoolAdapterContract.investorMemberShips(event.params.daoAddress, event.params.hashName);
+//         const whitelist = flexInvestmentPoolAdapterContract.getParticipanWhitelist(event.params.daoAddress);
+//         let tem: string[] = [];
 
-        if (whitelist.length > 0) {
-            for (let j = 0; j < whitelist.length; j++) {
-                tem.push(whitelist[j].toHexString())
-            }
-        }
+//         if (whitelist.length > 0) {
+//             for (let j = 0; j < whitelist.length; j++) {
+//                 tem.push(whitelist[j].toHexString())
+//             }
+//         }
 
-        flexDaoInvestorMembershipEntity.enable = FLEX_INVESTOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
-        flexDaoInvestorMembershipEntity.daoAddr = event.params.daoAddress;
-        flexDaoInvestorMembershipEntity.name = event.params.name;
-        flexDaoInvestorMembershipEntity.varifyType = BigInt.fromI32(rel.getVarifyType());
-        flexDaoInvestorMembershipEntity.minHolding = rel.getMinHolding();
-        flexDaoInvestorMembershipEntity.tokenAddress = rel.getTokenAddress();
-        flexDaoInvestorMembershipEntity.tokenId = rel.getTokenId();
-        flexDaoInvestorMembershipEntity.whiteList = tem;
-        flexDaoInvestorMembershipEntity.flexDaoEntity = event.params.daoAddress.toHexString();
+//         flexDaoInvestorMembershipEntity.enable = FLEX_INVESTOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
+//         flexDaoInvestorMembershipEntity.daoAddr = event.params.daoAddress;
+//         flexDaoInvestorMembershipEntity.name = event.params.name;
+//         flexDaoInvestorMembershipEntity.varifyType = BigInt.fromI32(rel.getVarifyType());
+//         flexDaoInvestorMembershipEntity.minHolding = rel.getMinHolding();
+//         flexDaoInvestorMembershipEntity.tokenAddress = rel.getTokenAddress();
+//         flexDaoInvestorMembershipEntity.tokenId = rel.getTokenId();
+//         flexDaoInvestorMembershipEntity.whiteList = tem;
+//         flexDaoInvestorMembershipEntity.flexDaoEntity = event.params.daoAddress.toHexString();
 
-        flexDaoInvestorMembershipEntity.save();
+//         flexDaoInvestorMembershipEntity.save();
 
-    }
-}
+//     }
+// }

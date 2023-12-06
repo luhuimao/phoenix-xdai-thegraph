@@ -15,7 +15,20 @@ import {
 import { FlexDaoSetPollingAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexDaoSetPollingAdapterContract";
 import { FlexDaoSetVotingAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexDaoSetVotingAdapterContract";
 import { DaoRegistry } from "../generated/FlexDaoSetAdapterContract/DaoRegistry";
-import { FlexDaosetProposal, FlexProposalVoteInfo, } from "../generated/schema"
+import { StewardManagementContract } from "../generated/FlexDaoSetAdapterContract/StewardManagementContract";
+import { FlexInvestmentPoolAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexInvestmentPoolAdapterContract";
+import { FlexFundingAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexFundingAdapterContract";
+
+import {
+    FlexDaosetProposal, FlexProposalVoteInfo,
+    FlexDaoInvestorCapacityEntity,
+    FlexDaoStewardMembershipEntity,
+    FlexDaoInvestorMembershipEntity,
+    FlexDaoVoteConfigEntity,
+    FlexDaoFeeInfoEntity,
+    FlexDaoProposerMembershipEntity,
+    FlexDaoPollingInfoEntity
+} from "../generated/schema"
 
 export function handleProposalCreated(event: ProposalCreated): void {
     let entity = FlexDaosetProposal.load(event.params.proposalId.toHexString())
@@ -71,6 +84,13 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
     let entity = FlexDaosetProposal.load(event.params.proposalId.toHexString())
     const flexDaosetContract = FlexDaoSetAdapterContract.bind(event.address);
     const daoContract = DaoRegistry.bind(event.params.daoAddr);
+    const contractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0xcad7b0867188190920a10bf710c45443f6358175d56a759e7dc109e6d7b5d753"));
+    const governorContract = StewardManagementContract.bind(contractAddr);
+    const fundingPoolcontractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x2207fd6117465cefcba0abc867150698c0464aa41a293ec29ca01b67a6350c3c"));
+    const flexInvestmentPoolAdapterContract = FlexInvestmentPoolAdapterContract.bind(fundingPoolcontractAddr);
+    const fundingContractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x7a8526bca00f0726b2fab8c3bfd5b00bfa84d07f111e48263b13de605eefcdda"));
+    const fundingContract = FlexFundingAdapterContract.bind(fundingContractAddr);
+
     const flexDaosetVotingContractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x8ceb7c7dc4c27ecfdcfd7ab759513c13202213bb0305fcd8889452f229d798e7"));
     const flexDaosetPollingContractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x5f0e8d109045653360289a7a02d5dc2a99e382006a42ef93f66de55ecff3176f"));
     const flexDaosetVotingContract = FlexDaoSetVotingAdapterContract.bind(flexDaosetVotingContractAddr);
@@ -81,31 +101,195 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
             case 0:
                 proposalState = BigInt.fromI32(flexDaosetContract.investorCapProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
+
+                if (proposalState == BigInt.fromI32(2)) {
+                    const MAX_INVESTORS_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0x69f4ffb3ebcb7809550bddd3e4d449a47e737bf6635bc7a730996643997b0e48"));
+                    const MAX_INVESTORS = daoContract.getConfiguration(Bytes.fromHexString("0xecbde689cc6337d29a750b8b8a8abbfa97427b4ac800ab55be2f2c87311510f2"));
+                    let flexDaoInvestorCapacityEntity = FlexDaoInvestorCapacityEntity.load(event.params.daoAddr.toHexString());
+                    if (flexDaoInvestorCapacityEntity) {
+                        flexDaoInvestorCapacityEntity.enable = MAX_INVESTORS_ENABLE == BigInt.fromI32(1) ? true : false;
+                        flexDaoInvestorCapacityEntity.capacityAmount = MAX_INVESTORS;
+                        flexDaoInvestorCapacityEntity.save();
+                    }
+                }
                 break;
             case 1:
                 proposalState = BigInt.fromI32(flexDaosetContract.governorMembershipProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
+                if (proposalState == BigInt.fromI32(2)) {
+                    let flexDaoStewardMembershipEntity = FlexDaoStewardMembershipEntity.load(event.params.daoAddr.toHexString());
+                    if (flexDaoStewardMembershipEntity) {
+
+                        const FLEX_GOVERNOR_MEMBERSHIP_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0x71ecc01da16acc23ab0eca549b0aaa7659ae183a220304fe5072243bc984fd79"));
+                        const FLEX_GOVERNOR_MEMBERSHIP_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x84580f9d926113d2c801e908a914b652340b3d8527c171bcea8d1868e92a507c"));
+                        const FLEX_GOVERNOR_MEMBERSHIP_MINI_HOLDING = daoContract.getConfiguration(Bytes.fromHexString("0x50c40dbbb38d5b02b04e0c6d7be02f4391fc8c14a98860284871ef1834c8390b"));
+                        const FLEX_GOVERNOR_MEMBERSHIP_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0x0bfac56541ded449415df8f96f54b002e55665d7fd2fafc884184e8c17f3c772"));
+                        const FLEX_GOVERNOR_MEMBERSHIP_TOKEN_ID = daoContract.getConfiguration(Bytes.fromHexString("0x93cc40268a57b3f7e5eb22a016a12d19010736289cceac5742a116fea3491b35"));
+
+                        const whitelist = governorContract.getGovernorWhitelist(event.params.daoAddr);
+                        let tem: string[] = [];
+
+                        if (whitelist.length > 0) {
+                            for (let j = 0; j < whitelist.length; j++) {
+                                tem.push(whitelist[j].toHexString())
+                            }
+                        }
+
+                        flexDaoStewardMembershipEntity.enable = FLEX_GOVERNOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
+                        flexDaoStewardMembershipEntity.varifyType = FLEX_GOVERNOR_MEMBERSHIP_TYPE;
+                        flexDaoStewardMembershipEntity.minHolding = FLEX_GOVERNOR_MEMBERSHIP_MINI_HOLDING;
+                        flexDaoStewardMembershipEntity.tokenAddress = FLEX_GOVERNOR_MEMBERSHIP_TOKEN_ADDRESS;
+                        flexDaoStewardMembershipEntity.tokenId = FLEX_GOVERNOR_MEMBERSHIP_TOKEN_ID;
+                        flexDaoStewardMembershipEntity.whiteList = tem;
+
+                        flexDaoStewardMembershipEntity.save();
+                    }
+                }
+
                 break;
             case 2:
                 proposalState = BigInt.fromI32(flexDaosetContract.investorMembershipProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
+                if (proposalState == BigInt.fromI32(2)) {
+                    let flexDaoInvestorMembershipEntity = FlexDaoInvestorMembershipEntity.load(event.params.daoAddr.toHexString());
+                    if (flexDaoInvestorMembershipEntity) {
+                        const FLEX_INVESTOR_MEMBERSHIP_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x77041e0d128001928f30b976713fed530b452bc354a9bad49ad1bcf93121f9dc"));
+                        const FLEX_INVESTOR_MEMBERSHIP_MIN_HOLDING = daoContract.getConfiguration(Bytes.fromHexString("0xcab672166d6a1c8dae3ca0b03fed2e7258db17c3c3801ac2651987b066d39647"));
+                        const FLEX_INVESTOR_MEMBERSHIP_TOKENID = daoContract.getConfiguration(Bytes.fromHexString("0xcdc3057ec9c82a3ea3fd34ef56b1825924525fbab071e1a2b9d664a07f400480"));
+                        const FLEX_INVESTOR_MEMBERSHIP_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xb119c630f9de64a3bbe24608480fd23223840df90bac249f3d3a2cb26105225c"));
+                        const FLEX_INVESTOR_MEMBERSHIP_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0xfeddffed075d0686e697569ece0ce2fd26bfbbb18719086f36d16c7117edb553"));
+
+                        const whitelist = flexInvestmentPoolAdapterContract.getParticipanWhitelist(event.params.daoAddr);
+                        let tem: string[] = [];
+
+                        if (whitelist.length > 0) {
+                            for (let j = 0; j < whitelist.length; j++) {
+                                tem.push(whitelist[j].toHexString())
+                            }
+                        }
+
+                        flexDaoInvestorMembershipEntity.enable = FLEX_INVESTOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
+                        flexDaoInvestorMembershipEntity.whiteList = tem;
+                        flexDaoInvestorMembershipEntity.varifyType = FLEX_INVESTOR_MEMBERSHIP_TYPE;
+                        flexDaoInvestorMembershipEntity.tokenId = FLEX_INVESTOR_MEMBERSHIP_TOKENID;
+                        flexDaoInvestorMembershipEntity.tokenAddress = FLEX_INVESTOR_MEMBERSHIP_TOKEN_ADDRESS;
+                        flexDaoInvestorMembershipEntity.minHolding = FLEX_INVESTOR_MEMBERSHIP_MIN_HOLDING;
+                        flexDaoInvestorMembershipEntity.save();
+                    }
+                }
+
                 break;
             case 3:
                 proposalState = BigInt.fromI32(flexDaosetVotingContract.votingProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
+                if (proposalState == BigInt.fromI32(2)) {
+                    let flexDaoVoteConfigEntity = FlexDaoVoteConfigEntity.load(event.params.daoAddr.toHexString());
+                    if (flexDaoVoteConfigEntity) {
+                        const votingPeriod = daoContract.getConfiguration(Bytes.fromHexString("0x9876c0f0505bfb2b1c38d3bbd25ba13159172cd0868972d76927723f5a9480fc"));
+                        const support = daoContract.getConfiguration(Bytes.fromHexString("0xb4c601c38beae7eebb719eda3438f59fcbfd4c6dd7d38c00665b6fd5b432df32"));
+                        const votingAsset = daoContract.getConfiguration(Bytes.fromHexString("0x75b7d343967750d1f6c15979b7559cea8be22ff1a06a51681b9cbef0d2fff4fe"));
+                        const weightAlgorithm = daoContract.getConfiguration(Bytes.fromHexString("0x18ef0b57fe939edb640a200fdf533493bd8f26a274151543a109b64c857e20f3"));
+                        const tokenId = daoContract.getConfiguration(Bytes.fromHexString("0x77b1580d1632c74a32483c26a7156260a89ae4138b020ea7d09b0dcf24f1ea24"));
+                        const quorum = daoContract.getConfiguration(Bytes.fromHexString("0x0324de13a5a6e302ddb95a9fdf81cc736fc8acee2abe558970daac27395904e7"));
+                        const contractAddr = daoContract.getAddressConfiguration(Bytes.fromHexString("0xb5a1ad3f04728d7c38547e3d43006a1ec090a02fce04bbb1d0ee4519a1921e57"));
+                        const supportType = daoContract.getConfiguration(Bytes.fromHexString("0xe815a3c082eed7f7f7baab546f11a8718682c0eb3017b099ddc301a92f6673e3"));
+                        const quorumType = daoContract.getConfiguration(Bytes.fromHexString("0x730faccfe82f70711a34ce5202c6e1b1f79f421c16fcef745a9d92d06a7c0d4c"));
+
+                        flexDaoVoteConfigEntity.contractAddr = contractAddr;
+                        flexDaoVoteConfigEntity.weightAlgorithm = weightAlgorithm;
+                        flexDaoVoteConfigEntity.votingPeriod = votingPeriod;
+                        flexDaoVoteConfigEntity.votingAsset = votingAsset;
+                        flexDaoVoteConfigEntity.tokenId = tokenId;
+                        flexDaoVoteConfigEntity.support = support;
+                        flexDaoVoteConfigEntity.quorum = quorum;
+                        flexDaoVoteConfigEntity.supportType = supportType;
+                        flexDaoVoteConfigEntity.quorumType = quorumType;
+
+                        flexDaoVoteConfigEntity.save();
+                    }
+                }
+
                 break;
             case 4:
                 entity.proposalTypeString = "FEES";
                 proposalState = BigInt.fromI32(flexDaosetContract.feesProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
+                if (proposalState == BigInt.fromI32(2)) {
+                    let flexDaoFeeInfoEntity = FlexDaoFeeInfoEntity.load(event.params.daoAddr.toHexString());
+                    if (flexDaoFeeInfoEntity) {
+                        const FLEX_MANAGEMENT_FEE_AMOUNT = daoContract.getConfiguration(Bytes.fromHexString("0x64c49ee5084f4940c312104c41603e43791b03dad28152afd6eadb5b960a8a87"));
+                        const FLEX_RETURN_TOKEN_MANAGEMENT_FEE_AMOUNT = daoContract.getConfiguration(Bytes.fromHexString("0xea659d8e1a730b10af1cecb4f8ee391adf80e75302d6aaeb9642dc8a4a5e5dbb"));
+                        const FLEX_MANAGEMENT_FEE_RECEIVE_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0x8987d08c67963e4cacd5e5936c122a968c66853d58299dd822c1942227109839"));
+
+                        flexDaoFeeInfoEntity.feeReceiver = FLEX_MANAGEMENT_FEE_RECEIVE_ADDRESS;
+                        flexDaoFeeInfoEntity.managementFee = FLEX_MANAGEMENT_FEE_AMOUNT;
+                        flexDaoFeeInfoEntity.payTokenManagementFee = FLEX_RETURN_TOKEN_MANAGEMENT_FEE_AMOUNT;
+                        flexDaoFeeInfoEntity.save();
+                    }
+                }
+
                 break;
             case 5:
                 proposalState = BigInt.fromI32(flexDaosetContract.proposerMembershipProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
+                if (proposalState == BigInt.fromI32(2)) {
+                    let flexDaoProposerMembershipEntity = FlexDaoProposerMembershipEntity.load(event.params.daoAddr.toHexString());
+                    if (flexDaoProposerMembershipEntity) {
+                        const FLEX_PROPOSER_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0x2073e6ba5c75026b006fdd165596d94b89cada2e00d8e44a99d422de8ea467e0"));
+                        const FLEX_PROPOSER_IDENTIFICATION_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x57901982635f8a470a3648422f8f769cf08dc2057489be5bf0099fcb44f7d43c"));
+                        const FLEX_PROPOSER_TOKENID = daoContract.getConfiguration(Bytes.fromHexString("0xb34f156369747125f679c86d97f51861a5a2a9f927a1addd4354acbaaa88ae57"));
+                        const FLEX_PROPOSER_MIN_HOLDING = daoContract.getConfiguration(Bytes.fromHexString("0xf6d5f030b79ca78dad001b87a49239ec96be97e62d13501da94c9a392700509e"));
+                        const FLEX_PROPOSER_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0x30091caaedd0994beeeeb3b7b5734296263687ae0126aaf79e5e0f8e5c1706b2"));
+
+                        let tem: string[] = [];
+
+                        const whitelist = fundingContract.getProposerWhitelist(event.params.daoAddr);
+                        if (whitelist.length > 0) {
+                            for (let j = 0; j < whitelist.length; j++) {
+                                tem.push(whitelist[j].toHexString())
+                            }
+                        }
+
+                        flexDaoProposerMembershipEntity.proposerMembershipEnable = FLEX_PROPOSER_ENABLE == BigInt.fromI32(1) ? true : false;
+                        flexDaoProposerMembershipEntity.varifyType = FLEX_PROPOSER_IDENTIFICATION_TYPE;
+                        flexDaoProposerMembershipEntity.minHolding = FLEX_PROPOSER_MIN_HOLDING;
+                        flexDaoProposerMembershipEntity.tokenAddress = FLEX_PROPOSER_TOKEN_ADDRESS;
+                        flexDaoProposerMembershipEntity.tokenId = FLEX_PROPOSER_TOKENID;
+                        flexDaoProposerMembershipEntity.whiteList = tem;
+
+                        flexDaoProposerMembershipEntity.save();
+                    }
+                }
+
                 break;
             case 6:
                 proposalState = BigInt.fromI32(flexDaosetPollingContract.pollForInvestmentProposals(event.params.daoAddr,
                     event.params.proposalId).getState());
+                if (proposalState == BigInt.fromI32(2)) {
+                    let flexDaoPollingInfoEntity = FlexDaoPollingInfoEntity.load(event.params.daoAddr.toHexString());
+                    if (flexDaoPollingInfoEntity) {
+                        const FLEX_POLLING_VOTING_PERIOD = daoContract.getConfiguration(Bytes.fromHexString("0xee63cc82ca6990a4cc5fa3ca10d8a5281ae1758a8d8f22892c4badb7cacd111e"));
+                        const FLEX_POLLING_VOTING_POWER = daoContract.getConfiguration(Bytes.fromHexString("0xcfe20936b2b01e130d3cdf28f04cbdf5f0721a7c9092d9ca7a9e189d87dd82e2"));
+                        const FLEX_POLLING_SUPER_MAJORITY = daoContract.getConfiguration(Bytes.fromHexString("0x777270e51451e60c2ce5118fc8e5844441dcc4d102e9052e60fb41312dbb848a"));
+                        const FLEX_POLLING_QUORUM = daoContract.getConfiguration(Bytes.fromHexString("0x7789eea44dccd66529026559d1b36215cb5766016b41a8a8f16e08b2ec875837"));
+                        const FLEX_POLL_VOTING_WEIGHTED_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x18ccfaf5deb9f2b0bd666344fa9c46950fbcee85fbfd05c3959876dfe502c209"));
+                        const FLEX_POLL_VOTING_ASSET_TOKEN_ID = daoContract.getConfiguration(Bytes.fromHexString("0x4e640b0dd9bf7618f23df95b8d516df2ff38868970d2d109c5b4b0455980659f"));
+                        const FLEX_POLL_VOTING_ASSET_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xa23a2786abcf8c551ce7fba1966ec456144d9caa0db070879d03a4ea4fd9b2fd"));
+                        const FLEX_INVESTMENT_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x6e9fd67c3f2ca4e2b4e4b45b33b985dc3a1bffcadea24d12440a5901f72217b5"));
+
+
+                        flexDaoPollingInfoEntity.enable = FLEX_INVESTMENT_TYPE == BigInt.fromI32(1) ? true : false;
+                        flexDaoPollingInfoEntity.votingPower = FLEX_POLLING_VOTING_POWER;
+                        flexDaoPollingInfoEntity.votingPeriod = FLEX_POLLING_VOTING_PERIOD;
+                        flexDaoPollingInfoEntity.votingAssetType = FLEX_POLL_VOTING_WEIGHTED_TYPE;
+                        flexDaoPollingInfoEntity.tokenID = FLEX_POLL_VOTING_ASSET_TOKEN_ID;
+                        flexDaoPollingInfoEntity.tokenAddress = FLEX_POLL_VOTING_ASSET_TOKEN_ADDRESS;
+                        flexDaoPollingInfoEntity.support = FLEX_POLLING_SUPER_MAJORITY;
+                        flexDaoPollingInfoEntity.quorum = FLEX_POLLING_QUORUM;
+                        flexDaoPollingInfoEntity.save();
+                    }
+                }
+
                 break;
             default:
                 proposalState = BigInt.fromI32(0);
