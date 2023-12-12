@@ -95,15 +95,14 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     const FLEX_INVESTOR_MEMBERSHIP_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x77041e0d128001928f30b976713fed530b452bc354a9bad49ad1bcf93121f9dc"));
     const FLEX_INVESTOR_MEMBERSHIP_MIN_HOLDING = daoContract.getConfiguration(Bytes.fromHexString("0xcab672166d6a1c8dae3ca0b03fed2e7258db17c3c3801ac2651987b066d39647"));
     const FLEX_INVESTOR_MEMBERSHIP_TOKENID = daoContract.getConfiguration(Bytes.fromHexString("0xcdc3057ec9c82a3ea3fd34ef56b1825924525fbab071e1a2b9d664a07f400480"));
-    const FLEX_INVESTOR_MEMBERSHIP_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xb119c630f9de64a3bbe24608480fd23223840df90bac249f3d3a2cb26105225c"));
+    const FLEX_INVESTOR_MEMBERSHIP_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0x0f57fc3a39a8a66c31f52eab69ced65d5ac74e4a182b215146a45a0281de53e8"));
     const FLEX_INVESTOR_MEMBERSHIP_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0xfeddffed075d0686e697569ece0ce2fd26bfbbb18719086f36d16c7117edb553"));
 
-    const whitelist = flexInvestmentPoolAdapterContract.getParticipanWhitelist(event.params.daoAddr);
+    const whitelist = flexInvestmentPoolAdapterContract.try_getParticipanWhitelist(event.params.daoAddr);
     let tem: string[] = [];
-
-    if (whitelist.length > 0) {
-      for (let j = 0; j < whitelist.length; j++) {
-        tem.push(whitelist[j].toHexString())
+    if (!whitelist.reverted && whitelist.value.length > 0) {
+      for (let j = 0; j < whitelist.value.length; j++) {
+        tem.push(whitelist.value[j].toHexString())
       }
     }
 
@@ -173,14 +172,12 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     const FLEX_PRIORITY_DEPOSIT_TOKENID = daoContract.getConfiguration(Bytes.fromHexString("0x461c66a772f861188d09f9684d5e0953afbfc97e19709fe20d9f2757f401e781"));
     const FLEX_PRIORITY_DEPOSIT_PERIOD = daoContract.getConfiguration(Bytes.fromHexString("0x46021a9d9de6e72975a5d8d7d00e797ad1d45b789f6119571dc599350897dcb5"));
 
-    const whitelist = flexInvestmentPoolAdapterContract.getPriorityDepositWhitelist(event.params.daoAddr);
-
-
+    const whitelist = flexInvestmentPoolAdapterContract.try_getPriorityDepositWhitelist(event.params.daoAddr);
     let tem: string[] = [];
 
-    if (whitelist.length > 0) {
-      for (let j = 0; j < whitelist.length; j++) {
-        tem.push(whitelist[j].toHexString())
+    if (!whitelist.reverted && whitelist.value.length > 0) {
+      for (let j = 0; j < whitelist.value.length; j++) {
+        tem.push(whitelist.value[j].toHexString())
       }
     }
     flexDaoPriorityMembershipEntity.daoAddr = event.params.daoAddr;
@@ -206,12 +203,12 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
 
     const contractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0xcad7b0867188190920a10bf710c45443f6358175d56a759e7dc109e6d7b5d753"));
     const governorContract = StewardManagementContract.bind(contractAddr);
-    const whitelist = governorContract.getGovernorWhitelist(event.params.daoAddr);
+    const whitelist = governorContract.try_getGovernorWhitelist(event.params.daoAddr);
     let tem: string[] = [];
 
-    if (whitelist.length > 0) {
-      for (let j = 0; j < whitelist.length; j++) {
-        tem.push(whitelist[j].toHexString())
+    if (!whitelist.reverted && whitelist.value.length > 0) {
+      for (let j = 0; j < whitelist.value.length; j++) {
+        tem.push(whitelist.value[j].toHexString())
       }
     }
 
@@ -238,10 +235,11 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
 
     let tem: string[] = [];
 
-    const whitelist = fundingContract.getProposerWhitelist(event.params.daoAddr);
-    if (whitelist.length > 0) {
-      for (let j = 0; j < whitelist.length; j++) {
-        tem.push(whitelist[j].toHexString())
+    const whitelist = fundingContract.try_getProposerWhitelist(event.params.daoAddr);
+
+    if (!whitelist.reverted && whitelist.value.length > 0) {
+      for (let j = 0; j < whitelist.value.length; j++) {
+        tem.push(whitelist.value[j].toHexString())
       }
     }
 
