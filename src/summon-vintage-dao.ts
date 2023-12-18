@@ -153,7 +153,7 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
         const VINTAGE_VOTING_SUPPORT_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x561bc86bc227a0f760218574791a84f180f6f9f02be9519a1f99c14fce07a310"));
         const VINTAGE_VOTING_QUORUM_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x8097540b5ab8a4c18e0b10cfbfd2c69e65e8da78f4f0485467006bafa3935964"));
         const QUORUM = daoContract.getConfiguration(Bytes.fromHexString("0x0324de13a5a6e302ddb95a9fdf81cc736fc8acee2abe558970daac27395904e7"));
-        const SUPPORT = daoContract.getConfiguration(Bytes.fromHexString("0xd8acb51ff3d48f690a25887aaf234c4ae5a66ab9839243cd8e2b639cade0663b"));
+        const SUPPORT = daoContract.getConfiguration(Bytes.fromHexString("b4c601c38beae7eebb719eda3438f59fcbfd4c6dd7d38c00665b6fd5b432df32"));
         const VOTING_PERIOD = daoContract.getConfiguration(Bytes.fromHexString("0x9876c0f0505bfb2b1c38d3bbd25ba13159172cd0868972d76927723f5a9480fc"));
         const PROPOSAL_EXECUTE_DURATION = daoContract.getConfiguration(Bytes.fromHexString("0x02a3530cbb6e7c084516c86f68bd62c3e3fcd783c6c5d7e138616207f7a32250"));
 

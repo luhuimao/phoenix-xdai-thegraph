@@ -115,9 +115,9 @@ export function handleproposalExecuted(event: ProposalExecuted): void {
         entity.save();
 
         if (entity.state == BigInt.fromI32(3)) {
-            let FlexDaoStatisticsEntity = FlexDaoStatistic.load(event.params.daoAddress.toString());
+            let FlexDaoStatisticsEntity = FlexDaoStatistic.load(event.params.daoAddress.toHexString());
             if (!FlexDaoStatisticsEntity) {
-                FlexDaoStatisticsEntity = new FlexDaoStatistic(event.params.daoAddress.toString());
+                FlexDaoStatisticsEntity = new FlexDaoStatistic(event.params.daoAddress.toHexString());
 
                 FlexDaoStatisticsEntity.fundRaised = BigInt.fromI64(0);
                 FlexDaoStatisticsEntity.fundRaisedFromWei = "0";

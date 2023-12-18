@@ -34,6 +34,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.proposalId = event.params.proposalId;
     // entity.proposalIdUTF8String = ethers.toUtf8String(event.params.proposalId);
     entity.daoAddr = event.params.daoAddr;
+    entity.proposer = event.transaction.from;
     entity.raiserAddress = event.params.account;
     entity.creationTime = event.params.creationTime;
     entity.createTimeString = new Date(event.block.timestamp.toI64() * 1000).toISOString();

@@ -500,6 +500,7 @@ type VintageNewFundProposal @entity{
 type VintageRaiserMangementProposal @entity{
   id: ID!
   daoAddr: Bytes! # address
+  proposer: Bytes! # address
   proposalId: Bytes!
   raiserAddress: Bytes! # address
   creationTime: BigInt! # uint256
