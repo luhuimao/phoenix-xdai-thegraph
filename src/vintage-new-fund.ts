@@ -36,6 +36,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     if (proposalInfo) {
         entity.daoAddr = event.params.daoAddr;
         entity.proposalId = event.params.proposalId;
+        entity.proposer= event.transaction.from;
         entity.acceptTokenAddr = proposalInfo.getAcceptTokenAddr();
         entity.fundRaiseTarget = proposalInfo.getAmountInfo().fundRaiseTarget;
         entity.fundRaiseTargetFromWei = entity.fundRaiseTarget.div(BigInt.fromI64(10 ** 18)).toString();

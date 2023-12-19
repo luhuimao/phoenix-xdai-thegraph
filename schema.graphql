@@ -465,6 +465,7 @@ type VintageNewFundProposal @entity{
   id: ID!
   daoAddr: Bytes! # address
   proposalId: Bytes! # bytes32
+  proposer: Bytes! # bytes32
   acceptTokenAddr: Bytes! # address
   fundRaiseTarget: BigInt! # uint256
   fundRaiseTargetFromWei: String!
