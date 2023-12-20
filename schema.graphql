@@ -111,6 +111,7 @@ type FlexDaoProposerMembershipEntity @entity{
   id: ID!
   daoAddr: Bytes! # address
   proposerMembershipEnable: Boolean
+  name: String
   varifyType: BigInt
   minHolding: BigInt
   tokenAddress: Bytes
@@ -123,6 +124,7 @@ type FlexDaoProposerMembershipEntity @entity{
 type FlexDaoStewardMembershipEntity @entity {
   id: ID!
   enable: Boolean
+  name: String
   varifyType: BigInt
   minHolding: BigInt
   tokenAddress: Bytes
@@ -146,6 +148,7 @@ type FlexDaoPriorityMembershipEntity @entity {
 type FlexDaoPollVoterMembershipEntity @entity{
   id: ID!
   daoAddr: Bytes! # address
+  name: String
   type: BigInt # uint256
   contractAddr: Bytes # address
   tokenId: BigInt # uint256
@@ -157,6 +160,7 @@ type FlexDaoInvestorMembershipEntity @entity{
   id: ID!
   enable: Boolean
   daoAddr: Bytes! # address
+  name: String
   varifyType: BigInt
   minHolding: BigInt
   tokenAddress: Bytes
@@ -425,6 +429,7 @@ type VintageInvestorMembershipEntity @entity{
   id: ID!
   daoAddr: Bytes! # address
   enable: Boolean
+  name: String
   varifyType: BigInt
   minAmount: BigInt
   tokenAddress: Bytes
@@ -437,6 +442,7 @@ type VintageGovernorMembershipEntity @entity{
   id: ID!
   daoAddr: Bytes! # address
   enable: Boolean
+  name: String
   varifyType: BigInt
   minAmount: BigInt
   tokenAddress: Bytes
