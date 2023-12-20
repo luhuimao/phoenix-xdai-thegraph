@@ -246,9 +246,9 @@ export function handleProcessFundRaise(event: ProcessFundRaise): void {
             Bytes.fromHexString("0x7fa36390a0e9b8b8004035572fd8345b1128cea12d1763a1baf8fbd4fb7b2027")
         );
         // fundingPoolAdapt.getFundInvestors(event.params.dao, event.params.fundRound);
-        let VintageDaoStatisticsEntity = VintageDaoStatistic.load(event.params.dao.toString());
+        let VintageDaoStatisticsEntity = VintageDaoStatistic.load(event.params.dao.toHexString());
         if (!VintageDaoStatisticsEntity) {
-            VintageDaoStatisticsEntity = new VintageDaoStatistic(event.params.dao.toString());
+            VintageDaoStatisticsEntity = new VintageDaoStatistic(event.params.dao.toHexString());
             VintageDaoStatisticsEntity.fundRaised = BigInt.fromI64(0);
             VintageDaoStatisticsEntity.fundRaisedFromWei = "0";
             VintageDaoStatisticsEntity.fundInvestedFromWei = "0";

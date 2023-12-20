@@ -88,9 +88,9 @@ export function handleProposalExecuted(event: ProposalExecutedEvent): void {
         proposalEntity.save();
 
         if (proposalEntity.state == BigInt.fromI32(3)) {
-            let VintageDaoStatisticsEntity = VintageDaoStatistic.load(event.params.daoAddr.toString());
+            let VintageDaoStatisticsEntity = VintageDaoStatistic.load(event.params.daoAddr.toHexString());
             if (!VintageDaoStatisticsEntity) {
-                VintageDaoStatisticsEntity = new VintageDaoStatistic(event.params.daoAddr.toString());
+                VintageDaoStatisticsEntity = new VintageDaoStatistic(event.params.daoAddr.toHexString());
                 VintageDaoStatisticsEntity.fundRaised = BigInt.fromI64(0);
                 VintageDaoStatisticsEntity.fundRaisedFromWei = "0";
                 VintageDaoStatisticsEntity.fundInvestedFromWei = "0";
