@@ -6,9 +6,9 @@ dataSources:
     name: DaoFactory
     network: xdai
     source:
-      address: "0x83AFB5D6551aEbaD11030021e2fa5fD8A78FC7Fa"
+      address: "0x0f272c0872e3101Cae3F9A6fE6Fa0cC339d662E2"
       abi: DaoFactory
-      startBlock: 30923551
+      startBlock: 31528605
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -273,9 +273,9 @@ dataSources:
     name: SummonDao
     network: xdai
     source:
-      address: "0x34cb93ac370c46d8acae9a91c5a67fe217291f16"
+      address: "0x4CFB3D11BcC29D3367E8107E844664DF52E5809B"
       abi: SummonDao
-      startBlock: 31284528
+      startBlock: 31528606
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -302,9 +302,9 @@ dataSources:
     name: SummonVintageDao
     network: xdai
     source:
-      address: "0x31D63544B3e9b0DD88ffaF1B4120Bd3a5F3A3Ffd"
+      address: "0x5444d57Ec537D4504A78DD55d651d3aDCe0509E5"
       abi: SummonVintageDao
-      startBlock: 30923824
+      startBlock: 31528610
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

@@ -93,6 +93,7 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
         const VINTAGE_INVESTOR_MEMBERSHIP_MIN_HOLDING = daoContract.getConfiguration(Bytes.fromHexString("0x04ecaf460eb9f82aeb70035e3f24c18a3650fa0da9ddbe7e63d70de659b9b901"));
         const VINTAGE_INVESTOR_MEMBERSHIP_TOKENID = daoContract.getConfiguration(Bytes.fromHexString("0x04ecaf460eb9f82aeb70035e3f24c18a3650fa0da9ddbe7e63d70de659b9b901"));
         const VINTAGE_INVESTOR_MEMBERSHIP_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xe373ab56628c86db3f0e36774c2c5e0393f9272ff5c976bc3f0db2db60cdbc14"));
+        const VINTAGE_INVESTOR_MEMBERSHIP_NAME = daoContract.getStringConfiguration(Bytes.fromHexString("0x324dfda0ffcc38c4650b5df076e6f7b4938c2b723873af58b1be5e221dd2cc30"));
 
         let tem: string[] = [];
         const whitelist = fundingPoolCont.getInvestorMembershipWhiteList(event.params.daoAddr)
@@ -104,6 +105,7 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
 
         vintageInvestorMembershipEntity.daoAddr = event.params.daoAddr;
         vintageInvestorMembershipEntity.enable = VINTAGE_INVESTOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
+        vintageInvestorMembershipEntity.name = VINTAGE_INVESTOR_MEMBERSHIP_NAME;
         vintageInvestorMembershipEntity.minAmount = VINTAGE_INVESTOR_MEMBERSHIP_MIN_HOLDING;
         vintageInvestorMembershipEntity.tokenAddress = VINTAGE_INVESTOR_MEMBERSHIP_TOKEN_ADDRESS;
         vintageInvestorMembershipEntity.tokenId = VINTAGE_INVESTOR_MEMBERSHIP_TOKENID;
@@ -122,6 +124,7 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
         const VINTAGE_GOVERNOR_MEMBERSHIP_MIN_DEPOSIT = daoContract.getConfiguration(Bytes.fromHexString("0x38cbcea6ba035c1d1890c83ce99918342ef746d839f9c2e2d4966d30a7e70b34"));
         const VINTAGE_GOVERNOR_MEMBERSHIP_TOKENID = daoContract.getConfiguration(Bytes.fromHexString("0xe33a9c3c87c85b9efd09c180b8fd30ca34326eb72e20fdd832b510971ccf71ae"));
         const VINTAGE_GOVERNOR_MEMBERSHIP_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xaa2cc36fff47c5c104b89a4abef628c92272c0af9c4db27739bc445b2f51e9a2"));
+        const VINTAGE_GOVERNOR_MEMBERSHIP_NAME = daoContract.getStringConfiguration(Bytes.fromHexString("0xa4b6f581a2d1e8b24bacedf9a91a13c8df6147ffb9d2bd4a770d867d91018da6"));
 
 
         let tem: string[] = [];
@@ -134,6 +137,7 @@ export function handleVintageDaoCreated(event: VintageDaoCreated): void {
 
         vintageGovernorMembershipEntity.daoAddr = event.params.daoAddr;
         vintageGovernorMembershipEntity.enable = VINTAGE_GOVERNOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
+        vintageGovernorMembershipEntity.name = VINTAGE_GOVERNOR_MEMBERSHIP_NAME;
         vintageGovernorMembershipEntity.tokenAddress = VINTAGE_GOVERNOR_MEMBERSHIP_TOKEN_ADDRESS;
         vintageGovernorMembershipEntity.tokenId = VINTAGE_GOVERNOR_MEMBERSHIP_TOKENID;
         vintageGovernorMembershipEntity.minAmount = VINTAGE_GOVERNOR_MEMBERSHIP_TYPE == BigInt.fromI32(4) ? VINTAGE_GOVERNOR_MEMBERSHIP_MIN_DEPOSIT : VINTAGE_GOVERNOR_MEMBERSHIP_MIN_HOLDING;
