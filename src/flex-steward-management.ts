@@ -42,7 +42,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.state = BigInt.fromI32(0);
     entity.stateInString = "Voting";
     entity.type = BigInt.fromI32(event.params.pType);
-    entity.typeInString = event.params.pType == 0 ? "Steward In" : "Steward Out";
+    entity.typeInString = event.params.pType == 0 ? "Governor In" : "Governor Out";
     entity.flexDaoEntity = event.params.daoAddr.toHexString();
     // Entities can be written to the store with `.save()`
     entity.save()
