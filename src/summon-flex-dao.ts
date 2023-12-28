@@ -295,21 +295,21 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     flexDaoPollingInfoEntity = new FlexDaoPollingInfoEntity(event.params.daoAddr.toHexString());
 
     const FLEX_POLLING_VOTING_PERIOD = daoContract.getConfiguration(Bytes.fromHexString("0xee63cc82ca6990a4cc5fa3ca10d8a5281ae1758a8d8f22892c4badb7cacd111e"));
-    const FLEX_POLLING_VOTING_POWER = daoContract.getConfiguration(Bytes.fromHexString("0xcfe20936b2b01e130d3cdf28f04cbdf5f0721a7c9092d9ca7a9e189d87dd82e2"));
+    // const FLEX_POLLING_VOTING_POWER = daoContract.getConfiguration(Bytes.fromHexString("0xcfe20936b2b01e130d3cdf28f04cbdf5f0721a7c9092d9ca7a9e189d87dd82e2"));
     const FLEX_POLLING_SUPER_MAJORITY = daoContract.getConfiguration(Bytes.fromHexString("0x777270e51451e60c2ce5118fc8e5844441dcc4d102e9052e60fb41312dbb848a"));
     const FLEX_POLLING_QUORUM = daoContract.getConfiguration(Bytes.fromHexString("0x7789eea44dccd66529026559d1b36215cb5766016b41a8a8f16e08b2ec875837"));
     const FLEX_POLL_VOTING_WEIGHTED_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x18ccfaf5deb9f2b0bd666344fa9c46950fbcee85fbfd05c3959876dfe502c209"));
     const FLEX_POLL_VOTING_ASSET_TOKEN_ID = daoContract.getConfiguration(Bytes.fromHexString("0x4e640b0dd9bf7618f23df95b8d516df2ff38868970d2d109c5b4b0455980659f"));
     const FLEX_POLL_VOTING_ASSET_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xa23a2786abcf8c551ce7fba1966ec456144d9caa0db070879d03a4ea4fd9b2fd"));
     const FLEX_INVESTMENT_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x6e9fd67c3f2ca4e2b4e4b45b33b985dc3a1bffcadea24d12440a5901f72217b5"));
-
-
+    const FLEX_POLL_VOTING_ASSET_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0xf873703084a7a9b6b81a595d5038f888fd90f4f9a530d4950a46c89eab021188"));
+    
     flexDaoPollingInfoEntity.daoAddr = event.params.daoAddr;
     flexDaoPollingInfoEntity.enable = FLEX_INVESTMENT_TYPE == BigInt.fromI32(1) ? true : false;
     flexDaoPollingInfoEntity.flexDaoEntity = event.params.daoAddr.toHexString();
-    flexDaoPollingInfoEntity.votingPower = FLEX_POLLING_VOTING_POWER;
+    flexDaoPollingInfoEntity.votingPower = FLEX_POLL_VOTING_WEIGHTED_TYPE;
     flexDaoPollingInfoEntity.votingPeriod = FLEX_POLLING_VOTING_PERIOD;
-    flexDaoPollingInfoEntity.votingAssetType = FLEX_POLL_VOTING_WEIGHTED_TYPE;
+    flexDaoPollingInfoEntity.votingAssetType = FLEX_POLL_VOTING_ASSET_TYPE;
     flexDaoPollingInfoEntity.tokenID = FLEX_POLL_VOTING_ASSET_TOKEN_ID;
     flexDaoPollingInfoEntity.tokenAddress = FLEX_POLL_VOTING_ASSET_TOKEN_ADDRESS;
     flexDaoPollingInfoEntity.support = FLEX_POLLING_SUPER_MAJORITY;

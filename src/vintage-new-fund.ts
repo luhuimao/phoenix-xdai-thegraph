@@ -36,7 +36,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     if (proposalInfo) {
         entity.daoAddr = event.params.daoAddr;
         entity.proposalId = event.params.proposalId;
-        entity.proposer= event.transaction.from;
+        entity.proposer = event.transaction.from;
         entity.acceptTokenAddr = proposalInfo.getAcceptTokenAddr();
         entity.fundRaiseTarget = proposalInfo.getAmountInfo().fundRaiseTarget;
         entity.fundRaiseTargetFromWei = entity.fundRaiseTarget.div(BigInt.fromI64(10 ** 18)).toString();
@@ -66,8 +66,24 @@ export function handleProposalCreated(event: ProposalCreated): void {
         entity.fundEndTime = BigInt.fromI32(0);
         entity.totalFund = BigInt.fromI32(0);
         entity.totalFundFromWei = "0";
+        entity.fundRaiseType = BigInt.fromI32(proposalInfo.getFundRaiseType());
+        entity.fundRaiseTypeInString = proposalInfo.getFundRaiseType() == 0 ? "FCFS" : "Free In";
+        entity.priorityDepositEnable = proposalInfo.getPriorityDeposite().enable;
+        entity.priorityDepositType = BigInt.fromI32(proposalInfo.getPriorityDeposite().vtype);
+        entity.priorityDepositTokenAddress = proposalInfo.getPriorityDeposite().token;
+        entity.priorityDepositTokenId = proposalInfo.getPriorityDeposite().tokenId;
+        entity.priorityDepositAmount = proposalInfo.getPriorityDeposite().amount;
+        if (proposalInfo.getPriorityDeposite().vtype == 3) {
+            const whitelist = vintageFundRaiseContract.try_getWhiteList(event.params.daoAddr, event.params.proposalId);
+            let tem: string[] = [];
+            if (!whitelist.reverted && whitelist.value.length > 0) {
+                for (let j = 0; j < whitelist.value.length; j++) {
+                    tem.push(whitelist.value[j].toHexString())
+                }
+            }
+            entity.priorityDepositWhiteList = tem;
+        }
         entity.vintageDaoEntity = event.params.daoAddr.toHexString();
-
         entity.save()
 
         const erc20 = ERC20.bind(Address.fromBytes(entity.acceptTokenAddr));
