@@ -14,10 +14,11 @@ import {
     ProposalExecuted
 } from "../generated/FlexFundingAdapterContract/FlexFundingAdapterContract"
 import { DaoRegistry } from "../generated/FlexFundingAdapterContract/DaoRegistry";
-import { DaoFactory } from "../generated/DaoFactory/DaoFactory";
+// import { DaoFactory } from "../generated/DaoFactory/DaoFactory";
 import { FlexInvestmentPoolAdapterContract } from "../generated/FlexInvestmentPoolAdapterContract/FlexInvestmentPoolAdapterContract";
 
 import { FlexFundingProposal, FlexDaoStatistic } from "../generated/schema"
+// import { encodeBase58 } from "ethers";
 
 export function handleProposalCreated(event: ProposalCreated): void {
     // Entities can be loaded from the store using a string ID; this ID
@@ -52,7 +53,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.returnTokenAmountFromWei = entity.returnTokenAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.price = proposalInfo.getInvestmentInfo().price;
     entity.minReturnAmount = proposalInfo.getInvestmentInfo().minReturnAmount;
-    entity.maxReturnAmount = proposalInfo.getInvestmentInfo().maxReturnAmount.plus(BigInt.fromI32(10 ** 18));
+    entity.maxReturnAmount = proposalInfo.getInvestmentInfo().maxReturnAmount.plus(BigInt.fromI32(10000));
     entity.minReturnAmountFromWei = entity.minReturnAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.maxReturnAmountFromWei = entity.maxReturnAmount.div(BigInt.fromI64(10 ** 18)).toString();
     entity.approverAddr = proposalInfo.getInvestmentInfo().approverAddr;
@@ -82,6 +83,16 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.priorityDepositTokenAddr = proposalInfo.getFundRaiseInfo().priorityDepositInfo.token;
     entity.priorityDepositTokenId = proposalInfo.getFundRaiseInfo().priorityDepositInfo.tokenId;
     entity.priorityDepositAmount = proposalInfo.getFundRaiseInfo().priorityDepositInfo.amount;
+    if (proposalInfo.getFundRaiseInfo().priorityDepositInfo.pType == 3) {
+        const whitelist = flexFundingContract.try_getPriorityDepositedWhitelist(event.params.daoAddress, event.params.proposalId);
+        let tem: string[] = [];
+        if (!whitelist.reverted && whitelist.value.length > 0) {
+            for (let j = 0; j < whitelist.value.length; j++) {
+                tem.push(whitelist.value[j].toHexString())
+            }
+        }
+        entity.priorityDepositWhiteList = tem;
+    }
     entity.tokenRewardAmount = proposalInfo.getProposerRewardInfo().tokenRewardAmount;
     entity.cashRewardAmount = proposalInfo.getProposerRewardInfo().cashRewardAmount;
     entity.startVoteTime = proposalInfo.getStartVoteTime();

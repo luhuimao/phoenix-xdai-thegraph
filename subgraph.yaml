@@ -328,9 +328,9 @@ dataSources:
     name: FlexFundingAdapterContract
     network: xdai
     source:
-      address: "0x2fac4d325465c61e0c7b7d83207ae29e8bb53efb"
+      address: "0x750072024c7B797f02D142298f817B8139b7C4Bc"
       abi: FlexFundingAdapterContract
-      startBlock: 31218222
+      startBlock: 31773960
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -442,9 +442,9 @@ dataSources:
     name: FlexInvestmentPoolAdapterContract
     network: xdai
     source:
-      address: "0x2b4897ce0a178bf100bb1510b699850e3c46fdab"
+      address: "0x556ae3f9256474Ac77038C794cc2Eb50cB53bD4f"
       abi: FlexInvestmentPoolAdapterContract
-      startBlock: 31284596
+      startBlock: 31773962
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

@@ -230,6 +230,7 @@ type FlexFundingProposal @entity{
   priorityDepositTokenAddr: Bytes! # address
   priorityDepositTokenId: BigInt! # uint256
   priorityDepositAmount: BigInt! # uint256
+  priorityDepositWhiteList: [String!]
   tokenRewardAmount: BigInt! # uint256
   cashRewardAmount: BigInt! # uint256
   startVoteTime: BigInt! # uint256
