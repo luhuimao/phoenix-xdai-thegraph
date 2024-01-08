@@ -294,6 +294,8 @@ dataSources:
           file: ./abis/StewardManagementContract.json
         - name: FlexFundingAdapterContract
           file: ./abis/FlexFundingAdapterContract.json
+        - name: FlexPollingVotingContract
+          file: ./abis/FlexPollingVotingContract.json
       eventHandlers:
         - event: FlexDaoCreated(address,address,string,address)
           handler: handleFlexDaoCreated

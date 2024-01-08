@@ -153,6 +153,7 @@ type FlexDaoPollVoterMembershipEntity @entity{
   contractAddr: Bytes # address
   tokenId: BigInt # uint256
   miniHoldingAmount: BigInt # uint256
+  whiteList: [String!]
   flexDaoEntity: FlexDaoEntity
 }
 

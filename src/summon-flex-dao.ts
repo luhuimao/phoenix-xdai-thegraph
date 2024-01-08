@@ -15,6 +15,7 @@ import { FlexInvestmentPoolAdapterContract } from "../generated/SummonDao/FlexIn
 import { StewardManagementContract } from "../generated/SummonDao/StewardManagementContract";
 import { DaoRegistry } from "../generated/SummonDao/DaoRegistry";
 import { FlexFundingAdapterContract } from "../generated/SummonDao/FlexFundingAdapterContract";
+import { FlexPollingVotingContract } from "../generated/SummonDao/FlexPollingVotingContract";
 import {
   DaoEntiy,
   FlexDaoEntity,
@@ -127,13 +128,25 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     const tokenAddress = daoContract.getAddressConfiguration(Bytes.fromHexString("0x770ef80745dba2953f780c8b963701e76fd3ac982923200f9214126e80f5f032"));
     const miniHoldingAmount = daoContract.getConfiguration(Bytes.fromHexString("0x6839e94cab6f83f7a12a5a3d1d6f3bbcaf0185a49b20b86e6f47b8c78494ac3d"));
     const FLEX_POLLVOTER_MEMBERSHIP_NAME = daoContract.getStringConfiguration(Bytes.fromHexString("0x7bd63360ec775df97ced77d73875245296c41d88ebf2b52f8e630b4e9a51b448"));
-
+    const flexPollingVotingContrctAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x6f48e16963713446db50a1503860d8e1fc3c888da56a85afcaa6dc29503cc610"))
+    const pollingVotingContract = FlexPollingVotingContract.bind(flexPollingVotingContrctAddr);
     pollVoterMembershipEntity.contractAddr = tokenAddress;
     pollVoterMembershipEntity.daoAddr = event.params.daoAddr;
     pollVoterMembershipEntity.name = FLEX_POLLVOTER_MEMBERSHIP_NAME;
     pollVoterMembershipEntity.type = type;
     pollVoterMembershipEntity.tokenId = tokenId;
     pollVoterMembershipEntity.miniHoldingAmount = miniHoldingAmount
+
+    const whitelist = pollingVotingContract.try_getWhitelist(event.params.daoAddr);
+    let tem: string[] = [];
+
+    if (!whitelist.reverted && whitelist.value.length > 0) {
+      for (let j = 0; j < whitelist.value.length; j++) {
+        tem.push(whitelist.value[j].toHexString())
+      }
+    }
+    pollVoterMembershipEntity.whiteList = tem;
+
     pollVoterMembershipEntity.flexDaoEntity = event.params.daoAddr.toHexString();
     pollVoterMembershipEntity.save();
   }
@@ -303,7 +316,7 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     const FLEX_POLL_VOTING_ASSET_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xa23a2786abcf8c551ce7fba1966ec456144d9caa0db070879d03a4ea4fd9b2fd"));
     const FLEX_INVESTMENT_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x6e9fd67c3f2ca4e2b4e4b45b33b985dc3a1bffcadea24d12440a5901f72217b5"));
     const FLEX_POLL_VOTING_ASSET_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0xf873703084a7a9b6b81a595d5038f888fd90f4f9a530d4950a46c89eab021188"));
-    
+
     flexDaoPollingInfoEntity.daoAddr = event.params.daoAddr;
     flexDaoPollingInfoEntity.enable = FLEX_INVESTMENT_TYPE == BigInt.fromI32(1) ? true : false;
     flexDaoPollingInfoEntity.flexDaoEntity = event.params.daoAddr.toHexString();
