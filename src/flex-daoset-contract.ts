@@ -39,6 +39,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
 
     entity.daoAddr = event.params.daoAddr;
     entity.proposalId = event.params.proposalId;
+    entity.proposer = event.transaction.from;
     entity.proposalType = BigInt.fromI32(event.params.pType);
     switch (event.params.pType) {
         // PARTICIPANT_CAP,

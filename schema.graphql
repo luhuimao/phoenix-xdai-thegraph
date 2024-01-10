@@ -381,6 +381,7 @@ type FlexDaosetProposal @entity{
   daoAddr: Bytes! # address
   proposalId: Bytes! # bytes32
   proposalType: BigInt! # uint256
+  proposer: Bytes! # address
   proposalTypeString: String!
   state: BigInt! # uint256
   creationTime: BigInt! # uint256
