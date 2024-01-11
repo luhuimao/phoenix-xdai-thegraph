@@ -126,7 +126,7 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                         const FLEX_GOVERNOR_MEMBERSHIP_MINI_HOLDING = daoContract.getConfiguration(Bytes.fromHexString("0x50c40dbbb38d5b02b04e0c6d7be02f4391fc8c14a98860284871ef1834c8390b"));
                         const FLEX_GOVERNOR_MEMBERSHIP_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0x0bfac56541ded449415df8f96f54b002e55665d7fd2fafc884184e8c17f3c772"));
                         const FLEX_GOVERNOR_MEMBERSHIP_TOKEN_ID = daoContract.getConfiguration(Bytes.fromHexString("0x93cc40268a57b3f7e5eb22a016a12d19010736289cceac5742a116fea3491b35"));
-
+                        const FLEX_GOVERNOR_MEMBERSHIP_NAME = daoContract.getStringConfiguration(Bytes.fromHexString("0xe6fc898f462d48724eb27b66193f38e8f83f214469eb3145fe9431a89411e724"));
                         const whitelist = governorContract.getGovernorWhitelist(event.params.daoAddr);
                         let tem: string[] = [];
 
@@ -137,6 +137,7 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                         }
 
                         flexDaoStewardMembershipEntity.enable = FLEX_GOVERNOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
+                        flexDaoStewardMembershipEntity.name = FLEX_GOVERNOR_MEMBERSHIP_NAME;
                         flexDaoStewardMembershipEntity.varifyType = FLEX_GOVERNOR_MEMBERSHIP_TYPE;
                         flexDaoStewardMembershipEntity.minHolding = FLEX_GOVERNOR_MEMBERSHIP_MINI_HOLDING;
                         flexDaoStewardMembershipEntity.tokenAddress = FLEX_GOVERNOR_MEMBERSHIP_TOKEN_ADDRESS;
@@ -159,6 +160,7 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                         const FLEX_INVESTOR_MEMBERSHIP_TOKENID = daoContract.getConfiguration(Bytes.fromHexString("0xcdc3057ec9c82a3ea3fd34ef56b1825924525fbab071e1a2b9d664a07f400480"));
                         const FLEX_INVESTOR_MEMBERSHIP_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0xb119c630f9de64a3bbe24608480fd23223840df90bac249f3d3a2cb26105225c"));
                         const FLEX_INVESTOR_MEMBERSHIP_ENABLE = daoContract.getConfiguration(Bytes.fromHexString("0xfeddffed075d0686e697569ece0ce2fd26bfbbb18719086f36d16c7117edb553"));
+                        const FLEX_INVESTOR_MEMBERSHIP_NAME = daoContract.getStringConfiguration(Bytes.fromHexString("0xfd9a8d4692ffc545577ff1979a0a918c2b536b6b6a891cf324a93b2c43907f83"));
 
                         const whitelist = flexInvestmentPoolAdapterContract.getParticipanWhitelist(event.params.daoAddr);
                         let tem: string[] = [];
@@ -170,6 +172,7 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                         }
 
                         flexDaoInvestorMembershipEntity.enable = FLEX_INVESTOR_MEMBERSHIP_ENABLE == BigInt.fromI32(1) ? true : false;
+                        flexDaoInvestorMembershipEntity.name = FLEX_INVESTOR_MEMBERSHIP_NAME;
                         flexDaoInvestorMembershipEntity.whiteList = tem;
                         flexDaoInvestorMembershipEntity.varifyType = FLEX_INVESTOR_MEMBERSHIP_TYPE;
                         flexDaoInvestorMembershipEntity.tokenId = FLEX_INVESTOR_MEMBERSHIP_TOKENID;
@@ -241,7 +244,7 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                         const FLEX_PROPOSER_TOKENID = daoContract.getConfiguration(Bytes.fromHexString("0xb34f156369747125f679c86d97f51861a5a2a9f927a1addd4354acbaaa88ae57"));
                         const FLEX_PROPOSER_MIN_HOLDING = daoContract.getConfiguration(Bytes.fromHexString("0xf6d5f030b79ca78dad001b87a49239ec96be97e62d13501da94c9a392700509e"));
                         const FLEX_PROPOSER_TOKEN_ADDRESS = daoContract.getAddressConfiguration(Bytes.fromHexString("0x30091caaedd0994beeeeb3b7b5734296263687ae0126aaf79e5e0f8e5c1706b2"));
-
+                        const FLEX_PROPOSER_MEMBERSHIP_NAME = daoContract.getStringConfiguration(Bytes.fromHexString("0xed2fa238da16f9e9bea8f1aa8dc2f0d04c522f8adbda71cc4ea5c11f5a51f32d"));
                         let tem: string[] = [];
 
                         const whitelist = fundingContract.getProposerWhitelist(event.params.daoAddr);
@@ -252,6 +255,7 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                         }
 
                         flexDaoProposerMembershipEntity.proposerMembershipEnable = FLEX_PROPOSER_ENABLE == BigInt.fromI32(1) ? true : false;
+                        flexDaoProposerMembershipEntity.name = FLEX_PROPOSER_MEMBERSHIP_NAME;
                         flexDaoProposerMembershipEntity.varifyType = FLEX_PROPOSER_IDENTIFICATION_TYPE;
                         flexDaoProposerMembershipEntity.minHolding = FLEX_PROPOSER_MIN_HOLDING;
                         flexDaoProposerMembershipEntity.tokenAddress = FLEX_PROPOSER_TOKEN_ADDRESS;

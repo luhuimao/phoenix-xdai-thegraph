@@ -494,9 +494,9 @@ dataSources:
     name: FlexDaoSetAdapterContract
     network: xdai
     source:
-      address: "0x56d58D6c9FB08Cd9b2f19DcfC8826CDc23B62514"
+      address: "0xEC3a7cb0C8d43cccCd1D2191646e2E4Cc98904fA"
       abi: FlexDaoSetAdapterContract
-      startBlock: 31872976
+      startBlock: 31875464
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
