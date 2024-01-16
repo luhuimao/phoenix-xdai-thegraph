@@ -22,6 +22,8 @@ export function handleProposalCreated(event: ProposalCreated): void {
     }
 
     entity.daoAddr = event.params.daoAddr;
+    entity.proposer = event.transaction.from;
+    entity.creationTime = event.block.timestamp;
     entity.proposalId = event.params.proposalId;
     entity.proposalType = BigInt.fromI32(event.params.pType);
     switch (event.params.pType) {

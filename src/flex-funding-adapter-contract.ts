@@ -98,6 +98,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.startVoteTime = proposalInfo.getStartVoteTime();
     entity.stopVoteTime = proposalInfo.getStopVoteTime();
     entity.state = BigInt.fromI32(proposalInfo.getState());
+    entity.creationTime = event.block.timestamp;
     entity.createDateTime = new Date(event.block.timestamp.toI64() * 1000).toISOString();
     entity.stopVoteTimeString = new Date(proposalInfo.getStopVoteTime().toI64() * 1000).toISOString();
     entity.totalFund = BigInt.fromI32(0);

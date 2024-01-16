@@ -14,6 +14,7 @@ import {
 } from "../generated/FlexDaoSetAdapterContract/FlexDaoSetAdapterContract"
 import { FlexDaoSetPollingAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexDaoSetPollingAdapterContract";
 import { FlexDaoSetVotingAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexDaoSetVotingAdapterContract";
+import { FlexPollingVotingContract } from "../generated/FlexDaoSetAdapterContract/FlexPollingVotingContract";
 import { DaoRegistry } from "../generated/FlexDaoSetAdapterContract/DaoRegistry";
 import { StewardManagementContract } from "../generated/FlexDaoSetAdapterContract/StewardManagementContract";
 import { FlexInvestmentPoolAdapterContract } from "../generated/FlexDaoSetAdapterContract/FlexInvestmentPoolAdapterContract";
@@ -27,7 +28,8 @@ import {
     FlexDaoVoteConfigEntity,
     FlexDaoFeeInfoEntity,
     FlexDaoProposerMembershipEntity,
-    FlexDaoPollingInfoEntity
+    FlexDaoPollingInfoEntity,
+    FlexDaoPollVoterMembershipEntity
 } from "../generated/schema"
 
 export function handleProposalCreated(event: ProposalCreated): void {
@@ -292,6 +294,36 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                         flexDaoPollingInfoEntity.support = FLEX_POLLING_SUPER_MAJORITY;
                         flexDaoPollingInfoEntity.quorum = FLEX_POLLING_QUORUM;
                         flexDaoPollingInfoEntity.save();
+                    }
+                    let pollVoterMembershipEntity = FlexDaoPollVoterMembershipEntity.load(event.params.daoAddr.toHexString());
+                    if (pollVoterMembershipEntity) {
+                        const tokenId = daoContract.getConfiguration(Bytes.fromHexString("0xf2b332c307ef460e99eb866928b78eca9f8af0da0626b4b48a13f9b52842fa6a"));
+                        const type = daoContract.getConfiguration(Bytes.fromHexString("0x249486eeae30287051f65673dfa390711fd4587950c33b4150a633763f869724"));
+                        const tokenAddress = daoContract.getAddressConfiguration(Bytes.fromHexString("0x770ef80745dba2953f780c8b963701e76fd3ac982923200f9214126e80f5f032"));
+                        const miniHoldingAmount = daoContract.getConfiguration(Bytes.fromHexString("0x6839e94cab6f83f7a12a5a3d1d6f3bbcaf0185a49b20b86e6f47b8c78494ac3d"));
+                        const FLEX_POLLVOTER_MEMBERSHIP_NAME = daoContract.getStringConfiguration(Bytes.fromHexString("0x7bd63360ec775df97ced77d73875245296c41d88ebf2b52f8e630b4e9a51b448"));
+                        const flexPollingVotingContrctAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x6f48e16963713446db50a1503860d8e1fc3c888da56a85afcaa6dc29503cc610"))
+                        const pollingVotingContract = FlexPollingVotingContract.bind(flexPollingVotingContrctAddr);
+                        const FLEX_FUNDING_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x6e9fd67c3f2ca4e2b4e4b45b33b985dc3a1bffcadea24d12440a5901f72217b5"));
+                        pollVoterMembershipEntity.contractAddr = tokenAddress;
+                        pollVoterMembershipEntity.daoAddr = event.params.daoAddr;
+                        pollVoterMembershipEntity.name = FLEX_POLLVOTER_MEMBERSHIP_NAME;
+                        pollVoterMembershipEntity.type = type;
+                        pollVoterMembershipEntity.tokenId = tokenId;
+                        pollVoterMembershipEntity.miniHoldingAmount = miniHoldingAmount;
+                        pollVoterMembershipEntity.enable = FLEX_FUNDING_TYPE == BigInt.fromI32(1) ? true : false;
+
+                        const whitelist = pollingVotingContract.try_getWhitelist(event.params.daoAddr);
+                        let tem: string[] = [];
+
+                        if (!whitelist.reverted && whitelist.value.length > 0) {
+                            for (let j = 0; j < whitelist.value.length; j++) {
+                                tem.push(whitelist.value[j].toHexString())
+                            }
+                        }
+
+                        pollVoterMembershipEntity.whiteList = tem;
+                        pollVoterMembershipEntity.save();
                     }
                 }
 

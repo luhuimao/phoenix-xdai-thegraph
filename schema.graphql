@@ -149,6 +149,7 @@ type FlexDaoPollVoterMembershipEntity @entity{
   id: ID!
   daoAddr: Bytes! # address
   name: String
+  enable: Boolean
   type: BigInt # uint256
   contractAddr: Bytes # address
   tokenId: BigInt # uint256
@@ -237,6 +238,7 @@ type FlexFundingProposal @entity{
   startVoteTime: BigInt! # uint256
   stopVoteTime: BigInt! # uint256
   state: BigInt! # uint256
+  creationTime: BigInt
   createDateTime: String!
   stopVoteTimeString: String!
   totalFund: BigInt! # uint256
@@ -570,10 +572,12 @@ type VintageFundingProposalInfo @entity{
 type VintageDaoSetProposal @entity{
   id:ID!
   daoAddr: Bytes! # address
+  proposer: Bytes
   proposalId: Bytes! # bytes32
   proposalType: BigInt! # uint256
   proposalTypeString: String!
   state: BigInt! # uint256
+  creationTime: BigInt
   vintageDaoEntity: VintageDaoEntity
 }
 

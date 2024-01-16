@@ -130,12 +130,14 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     const FLEX_POLLVOTER_MEMBERSHIP_NAME = daoContract.getStringConfiguration(Bytes.fromHexString("0x7bd63360ec775df97ced77d73875245296c41d88ebf2b52f8e630b4e9a51b448"));
     const flexPollingVotingContrctAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x6f48e16963713446db50a1503860d8e1fc3c888da56a85afcaa6dc29503cc610"))
     const pollingVotingContract = FlexPollingVotingContract.bind(flexPollingVotingContrctAddr);
+    const FLEX_FUNDING_TYPE = daoContract.getConfiguration(Bytes.fromHexString("0x6e9fd67c3f2ca4e2b4e4b45b33b985dc3a1bffcadea24d12440a5901f72217b5"));
     pollVoterMembershipEntity.contractAddr = tokenAddress;
     pollVoterMembershipEntity.daoAddr = event.params.daoAddr;
     pollVoterMembershipEntity.name = FLEX_POLLVOTER_MEMBERSHIP_NAME;
     pollVoterMembershipEntity.type = type;
     pollVoterMembershipEntity.tokenId = tokenId;
-    pollVoterMembershipEntity.miniHoldingAmount = miniHoldingAmount
+    pollVoterMembershipEntity.miniHoldingAmount = miniHoldingAmount;
+    pollVoterMembershipEntity.enable = FLEX_FUNDING_TYPE == BigInt.fromI32(1) ? true : false;
 
     const whitelist = pollingVotingContract.try_getWhitelist(event.params.daoAddr);
     let tem: string[] = [];
