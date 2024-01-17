@@ -263,6 +263,12 @@ dataSources:
       abis:
         - name: VintageDaoSetAdapterContract
           file: ./abis/VintageDaoSetAdapterContract.json
+        - name: DaoRegistry
+          file: ./abis/DaoRegistry.json
+        - name: VintageFundingPoolAdapterContract
+          file: ./abis/VintageFundingPoolAdapterContract.json
+        - name: VintageRaiserManagementContract
+          file: ./abis/VintageRaiserManagementContract.json
       eventHandlers:
         - event: ProposalCreated(address,bytes32,uint8)
           handler: handleProposalCreated
