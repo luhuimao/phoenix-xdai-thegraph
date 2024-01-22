@@ -221,7 +221,7 @@ export function handleProposalProcessed(event: ProposalProcessed): void {
                                     tem2.push(rel.value.getValue1()[j]);
                                 }
                                 flexDaoVoteConfigEntity.governors = tem1;
-                                flexDaoVoteConfigEntity.allocaitons = tem2;
+                                flexDaoVoteConfigEntity.allocations = tem2;
                             }
 
                             flexDaoVoteConfigEntity.save();

@@ -302,6 +302,10 @@ dataSources:
           file: ./abis/FlexFundingAdapterContract.json
         - name: FlexPollingVotingContract
           file: ./abis/FlexPollingVotingContract.json
+        - name: FlexDaoSetVotingAdapterContract
+          file: ./abis/FlexDaoSetVotingAdapterContract.json
+        - name: FlexStewardAllocationAdapter
+          file: ./abis/FlexStewardAllocationAdapter.json
       eventHandlers:
         - event: FlexDaoCreated(address,address,string,address)
           handler: handleFlexDaoCreated
@@ -500,9 +504,9 @@ dataSources:
     name: FlexDaoSetAdapterContract
     network: xdai
     source:
-      address: "0x2eDE37eBBF9a7EA2ADc3387523915f2D9606B539"
+      address: "0x0552A0e1cd81e46b64e6b4bb538B16b165739aB0"
       abi: FlexDaoSetAdapterContract
-      startBlock: 31997666
+      startBlock: 32067434
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

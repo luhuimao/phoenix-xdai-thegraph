@@ -184,7 +184,7 @@ type FlexDaoVoteConfigEntity @entity{
   quorum: BigInt
   votingPeriod: BigInt
   governors: [String!]
-  allocaitons: [BigInt!]
+  allocations: [BigInt!]
   flexDaoEntity: FlexDaoEntity
 }
 

@@ -16,6 +16,8 @@ import { StewardManagementContract } from "../generated/SummonDao/StewardManagem
 import { DaoRegistry } from "../generated/SummonDao/DaoRegistry";
 import { FlexFundingAdapterContract } from "../generated/SummonDao/FlexFundingAdapterContract";
 import { FlexPollingVotingContract } from "../generated/SummonDao/FlexPollingVotingContract";
+import { FlexDaoSetVotingAdapterContract } from "../generated/SummonDao/FlexDaoSetVotingAdapterContract";
+import { FlexStewardAllocationAdapter } from "../generated/SummonDao/FlexStewardAllocationAdapter";
 import {
   DaoEntiy,
   FlexDaoEntity,
@@ -177,6 +179,23 @@ export function handleFlexDaoCreated(event: FlexDaoCreated): void {
     voteConfigEntity.quorum = quorum;
     voteConfigEntity.supportType = supportType;
     voteConfigEntity.quorumType = quorumType;
+
+    if (votingAsset == BigInt.fromI32(3)) {
+      const contractAddr = daoContract.getAdapterAddress(Bytes.fromHexString("0x37cbe06c1044f98864ea25736326bc1d488e24e5e23781ea2ad64c4069cb9e6e"));
+      const flexStewardAllocationAdapter = FlexStewardAllocationAdapter.bind(contractAddr);
+      const governors = daoContract.try_getAllSteward();
+      if (!governors.reverted && governors.value.length > 0) {
+        let tem1: string[] = [];
+        let tem2: BigInt[] = [];
+        for (let j = 0; j < governors.value.length; j++) {
+          tem1.push(governors.value[j].toHexString());
+          let alloc = flexStewardAllocationAdapter.try_getAllocation(event.params.daoAddr, governors.value[j]);
+          if (!alloc.reverted) { tem2.push(alloc.value); }
+        }
+        voteConfigEntity.governors = tem1;
+        voteConfigEntity.allocations = tem2;
+      }
+    }
 
     voteConfigEntity.save();
   }
