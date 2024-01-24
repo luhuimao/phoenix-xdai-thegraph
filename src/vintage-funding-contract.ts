@@ -69,6 +69,7 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
     entity.proposalStartVotingTimestamp = vintageFundingProposalInfo.getProposalTimeInfo().proposalStartVotingTimestamp;
     entity.proposalStopVotingTimestamp = vintageFundingProposalInfo.getProposalTimeInfo().proposalStopVotingTimestamp;
     entity.proposalExecuteTimestamp = vintageFundingProposalInfo.getProposalTimeInfo().proposalExecuteTimestamp;
+    entity.creationTime = event.block.timestamp;
     entity.createDateTime = new Date(event.block.timestamp.toI64() * 1000).toISOString();
     entity.vintageDaoEntity = event.params.daoAddr.toHexString();
     entity.save()

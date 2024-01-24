@@ -567,6 +567,7 @@ type VintageFundingProposalInfo @entity{
   proposalStartVotingTimestamp: BigInt! # uint256
   proposalStopVotingTimestamp: BigInt! # uint256
   proposalExecuteTimestamp: BigInt! # uint256
+  creationTime: BigInt
   createDateTime: String!
   vintageDaoEntity: VintageDaoEntity
 }
