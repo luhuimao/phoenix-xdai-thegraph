@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: DaoFactory
-    network: xdai
+    network: gnosis
     source:
       address: "0x0f272c0872e3101Cae3F9A6fE6Fa0cC339d662E2"
       abi: DaoFactory
@@ -27,11 +27,11 @@ dataSources:
       file: ./src/dao-factory.ts
   - kind: ethereum
     name: VintageFundRaiseAdapterContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0x3708FeB225196803F54Ff51130D33f320e3cD36B"
+      address: "0xC919743CAde9fD517D734a0E82040f1834673425"
       abi: VintageFundRaiseAdapterContract
-      startBlock: 30958246
+      startBlock: 32179534
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -52,11 +52,11 @@ dataSources:
       file: ./src/vintage-new-fund.ts
   - kind: ethereum
     name: VintageVotingContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0xd042e1431B3E0E9f5F254BB63f9899d5DbaAEad0"
+      address: "0xBEC58Ac4C78C4Fe033bEdd6482568d56688F7ceB"
       abi: VintageVotingContract
-      startBlock: 30923755
+      startBlock: 32179536
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -73,11 +73,11 @@ dataSources:
       file: ./src/vintage-voting.ts
   - kind: ethereum
     name: VintageRaiserManagementContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0x52C27186562531b7C3Af2FCbD8F3bd946366A249"
+      address: "0x6840e1C46B236846996ab8E6A8C669EfA0f263BB"
       abi: VintageRaiserManagementContract
-      startBlock: 32018368
+      startBlock: 32179539
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -95,11 +95,11 @@ dataSources:
       file: ./src/vintage-raiser-management.ts
   - kind: ethereum
     name: VintageFundingAdapterContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0xacA6c14bC5f4ba3E00a8455aE47ADe31FE713f2c"
+      address: "0xac780bCe030E85BeADDfE5591A138D7Fb6c48a94"
       abi: VintageFundingAdapterContract
-      startBlock: 30923791
+      startBlock: 32179543
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -124,7 +124,7 @@ dataSources:
       file: ./src/vintage-funding-contract.ts
   - kind: ethereum
     name: VintageFundingPoolAdapterContract
-    network: xdai
+    network: gnosis
     source:
       address: "0x77C6838682C492eDFe49bEC363ffa62998d5A542"
       abi: VintageFundingPoolAdapterContract
@@ -157,7 +157,7 @@ dataSources:
       file: ./src/vintage-funding-pool.ts
   - kind: ethereum
     name: VintageVesting
-    network: xdai
+    network: gnosis
     source:
       address: "0x2e40e9431Dba18817c4FA05e97B61868F6138Ebb"
       abi: VintageVesting
@@ -180,7 +180,7 @@ dataSources:
       file: ./src/vintage-vesting.ts
   - kind: ethereum
     name: VintageAllocationAdapterContract
-    network: xdai
+    network: gnosis
     source:
       address: "0x030E8331c46191aBF02120dfd1717d5009d31f11"
       abi: VintageAllocationAdapterContract
@@ -205,7 +205,7 @@ dataSources:
       file: ./src/vintage-alloc.ts
   - kind: ethereum
     name: VintageEscrowFundAdapterContract
-    network: xdai
+    network: gnosis
     source:
       address: "0x208c28b0D98763C60269b52fC6a4438B89C3e114"
       abi: VintageEscrowFundAdapterContract
@@ -227,7 +227,7 @@ dataSources:
       file: ./src/vintage-escrow-fund.ts
   - kind: ethereum
     name: VintageFreeInEscrowFundAdapterContract
-    network: xdai
+    network: gnosis
     source:
       address: "0x746E96b56CD73849510f494CC8011206E69f49B6"
       abi: VintageFreeInEscrowFundAdapterContract
@@ -249,11 +249,11 @@ dataSources:
       file: ./src/vintage-free-in-escrow-fund.ts
   - kind: ethereum
     name: VintageDaoSetAdapterContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0x6670cd0857B6CD3381DAc490DB1205b4823061dC"
+      address: "0x71a216E657ff4f43131c0a59cda91d9D28458492"
       abi: VintageDaoSetAdapterContract
-      startBlock: 32018373
+      startBlock: 32179545
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -277,7 +277,7 @@ dataSources:
       file: ./src/vintage-daoset.ts
   - kind: ethereum
     name: SummonDao
-    network: xdai
+    network: gnosis
     source:
       address: "0x4CFB3D11BcC29D3367E8107E844664DF52E5809B"
       abi: SummonDao
@@ -312,7 +312,7 @@ dataSources:
       file: ./src/summon-flex-dao.ts
   - kind: ethereum
     name: SummonVintageDao
-    network: xdai
+    network: gnosis
     source:
       address: "0x5444d57Ec537D4504A78DD55d651d3aDCe0509E5"
       abi: SummonVintageDao
@@ -338,7 +338,7 @@ dataSources:
       file: ./src/summon-vintage-dao.ts
   - kind: ethereum
     name: FlexFundingAdapterContract
-    network: xdai
+    network: gnosis
     source:
       address: "0x750072024c7B797f02D142298f817B8139b7C4Bc"
       abi: FlexFundingAdapterContract
@@ -365,7 +365,7 @@ dataSources:
       file: ./src/flex-funding-adapter-contract.ts
   - kind: ethereum
     name: FlexVesting
-    network: xdai
+    network: gnosis
     source:
       address: "0x3A3bCF67a82FF39816870695D16F5E822923D1c0"
       abi: FlexVesting
@@ -388,11 +388,11 @@ dataSources:
       file: ./src/flex-vesting-contract.ts
   - kind: ethereum
     name: StewardManagementContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0x26Fd44a7Ea24239b3Cafa555Ba43f5b21F3C498d"
+      address: "0x695b051a8e7AC8119a181AC76a06d55C98F7be1E"
       abi: StewardManagementContract
-      startBlock: 30923637
+      startBlock: 32179513
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -410,11 +410,11 @@ dataSources:
       file: ./src/flex-steward-management.ts
   - kind: ethereum
     name: FlexPollingVotingContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0x25A0f7520a0175065b3980fcb5dE6E91BC587D34"
+      address: "0x930DA9AbDDdf94A90F964a372526863b4a600fd0"
       abi: FlexPollingVotingContract
-      startBlock: 30923606
+      startBlock: 32179510
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -431,11 +431,11 @@ dataSources:
       file: ./src/flex-poll-voting.ts
   - kind: ethereum
     name: FlexVotingContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0x71cD9837113663787B0D9B9cc2b3f1BF5234d265"
+      address: "0x8a9285641A793ca24ca17a37671CB4A87A3249Fb"
       abi: FlexVotingContract
-      startBlock: 30923616
+      startBlock: 32179487
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -452,7 +452,7 @@ dataSources:
       file: ./src/flex-voting.ts
   - kind: ethereum
     name: FlexInvestmentPoolAdapterContract
-    network: xdai
+    network: gnosis
     source:
       address: "0x556ae3f9256474Ac77038C794cc2Eb50cB53bD4f"
       abi: FlexInvestmentPoolAdapterContract
@@ -477,7 +477,7 @@ dataSources:
       file: ./src/flex-funding-pool.ts
   - kind: ethereum
     name: FlexAllocationAdapterContract
-    network: xdai
+    network: gnosis
     source:
       address: "0xC531b03A442A70a6031366C52827Cd33eD48A54c"
       abi: FlexAllocationAdapterContract
@@ -502,11 +502,11 @@ dataSources:
       file: ./src/flex-alloc.ts
   - kind: ethereum
     name: FlexDaoSetAdapterContract
-    network: xdai
+    network: gnosis
     source:
-      address: "0x0552A0e1cd81e46b64e6b4bb538B16b165739aB0"
+      address: "0xA09e5C6143527af562a6603FCE8Afdba9217fEA7"
       abi: FlexDaoSetAdapterContract
-      startBlock: 32067434
+      startBlock: 32179489
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -539,7 +539,7 @@ dataSources:
       file: ./src/flex-daoset-contract.ts
   - kind: ethereum
     name: Vesting
-    network: xdai
+    network: gnosis
     source:
       address: "0xC8A7a42a0618322971554E2f4A15bAFeEa8f7219"
       abi: Vesting
@@ -566,7 +566,7 @@ dataSources:
       file: ./src/vesting.ts
   - kind: ethereum
     name: VestingERC721
-    network: xdai
+    network: gnosis
     source:
       address: "0xa5f7BC17E41600Be9853210CA9f9136577c93CEC"
       abi: VestingERC721
@@ -589,7 +589,7 @@ dataSources:
       file: ./src/vesting.ts
   - kind: ethereum
     name: VintageVestingERC721
-    network: xdai
+    network: gnosis
     source:
       address: "0x698694c44Df580429C20876a02B6bac0fE63F5A8"
       abi: VintageVestingERC721
@@ -612,7 +612,7 @@ dataSources:
       file: ./src/vintage-vesting.ts
   - kind: ethereum
     name: FlexVestingERC721
-    network: xdai
+    network: gnosis
     source:
       address: "0x6edF88BC4bE9E8adCC78ed0C739aC5a42832a02e"
       abi: FlexVestingERC721
