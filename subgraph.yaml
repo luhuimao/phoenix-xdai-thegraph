@@ -97,9 +97,9 @@ dataSources:
     name: VintageFundingAdapterContract
     network: gnosis
     source:
-      address: "0xac780bCe030E85BeADDfE5591A138D7Fb6c48a94"
+      address: "0x60cE3210Bb7BBf06E539DD855f679215aA5bc83B"
       abi: VintageFundingAdapterContract
-      startBlock: 32179543
+      startBlock: 32296598
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -159,9 +159,9 @@ dataSources:
     name: VintageVesting
     network: gnosis
     source:
-      address: "0x2e40e9431Dba18817c4FA05e97B61868F6138Ebb"
+      address: "0x5DFc77A273996EbeAA9F524e9dDbB8A40dC41401"
       abi: VintageVesting
-      startBlock: 30923810
+      startBlock: 32296602
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -182,9 +182,9 @@ dataSources:
     name: VintageAllocationAdapterContract
     network: gnosis
     source:
-      address: "0x030E8331c46191aBF02120dfd1717d5009d31f11"
+      address: "0xaFf1B7D288891FbdD1a839Fc975101d8D29264D9"
       abi: VintageAllocationAdapterContract
-      startBlock: 30923805
+      startBlock: 32296600
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -340,9 +340,9 @@ dataSources:
     name: FlexFundingAdapterContract
     network: gnosis
     source:
-      address: "0x750072024c7B797f02D142298f817B8139b7C4Bc"
+      address: "0xA775a509E289FE69b96033dE94eF0616Fad319ac"
       abi: FlexFundingAdapterContract
-      startBlock: 31773960
+      startBlock: 32342287
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -367,9 +367,9 @@ dataSources:
     name: FlexVesting
     network: gnosis
     source:
-      address: "0x3A3bCF67a82FF39816870695D16F5E822923D1c0"
+      address: "0x6E8acc8ecE34B4be998b225510D4c1b53496E36a"
       abi: FlexVesting
-      startBlock: 30923628
+      startBlock: 32342291
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -454,9 +454,9 @@ dataSources:
     name: FlexInvestmentPoolAdapterContract
     network: gnosis
     source:
-      address: "0x556ae3f9256474Ac77038C794cc2Eb50cB53bD4f"
+      address: "0xCC1da35298434F923f05582C7Ed00Cae5b8571Fc"
       abi: FlexInvestmentPoolAdapterContract
-      startBlock: 31773962
+      startBlock: 32342289
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -479,9 +479,9 @@ dataSources:
     name: FlexAllocationAdapterContract
     network: gnosis
     source:
-      address: "0xC531b03A442A70a6031366C52827Cd33eD48A54c"
+      address: "0x193E7d02D8630e4239d552A501e4c0F39200fC0d"
       abi: FlexAllocationAdapterContract
-      startBlock: 30923645
+      startBlock: 32342293
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

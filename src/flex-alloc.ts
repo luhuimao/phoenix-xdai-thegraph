@@ -39,7 +39,6 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
     entity.lps = tem;
     entity.save()
 
-
     let flexFundingProposalEntity = FlexFundingProposal.load(event.params.proposalId.toHexString());
     let allocContract = FlexAllocationAdapterContract.bind(event.address);
 
@@ -49,25 +48,33 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
         const vestingInterval = flexFundingProposalEntity.vestingInterval;
         const vestingEndTime = flexFundingProposalEntity.vestingEndTime;
 
+        //investors 
         for (var i = 0; i < entity.lps.length; i++) {
             let flexUserVestInfo = new FlexUserVestInfo(entity.proposalId.toHexString() + "-" + entity.lps[i]);
             flexUserVestInfo.daoAddr = event.params.daoAddr;
             flexUserVestInfo.fundingProposalId = event.params.proposalId;
             flexUserVestInfo.recipient = Bytes.fromHexString(entity.lps[i]);
-            let vestInfo = allocContract.vestingInfos(
+            // let vestInfo = allocContract.vestingInfos(
+            //     event.params.daoAddr,
+            //     flexUserVestInfo.fundingProposalId,
+            //     Address.fromBytes(flexUserVestInfo.recipient)
+            // );
+            const paybackAmount = allocContract.getInvestmentRewards(
                 event.params.daoAddr,
-                flexUserVestInfo.fundingProposalId,
+                event.params.proposalId,
                 Address.fromBytes(flexUserVestInfo.recipient)
             );
             flexUserVestInfo.vestingStartTime = vestingStartTime;
             flexUserVestInfo.vestingCliffEndTime = vestingCliffEndTime;
             flexUserVestInfo.vestingInterval = vestingInterval;
             flexUserVestInfo.vestingEndTime = vestingEndTime;
-            flexUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+            flexUserVestInfo.totalAmount = paybackAmount;
             flexUserVestInfo.created = false;
 
             flexUserVestInfo.save();
         }
+
+        //management fee
         const dao = DaoRegistry.bind(event.params.daoAddr);
         const managementFeeAddress = dao.getAddressConfiguration(Bytes.fromHexString("0x8987d08c67963e4cacd5e5936c122a968c66853d58299dd822c1942227109839"));
         const vestInfo = allocContract.vestingInfos(
@@ -86,6 +93,27 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
             flexUserVestInfo.vestingInterval = vestingInterval;
             flexUserVestInfo.vestingEndTime = vestingEndTime;
             flexUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+            flexUserVestInfo.created = false;
+            flexUserVestInfo.save();
+        }
+
+        //proposer payback token reward
+        const proposerVestInfo = allocContract.vestingInfos(
+            event.params.daoAddr,
+            event.params.proposalId,
+            event.params.proposer
+        );
+
+        if (proposerVestInfo.getTokenAmount() > BigInt.fromI32(0)) {
+            let flexUserVestInfo = new FlexUserVestInfo(entity.proposalId.toHexString() + "-" + event.params.proposer.toHexString());
+            flexUserVestInfo.daoAddr = event.params.daoAddr;
+            flexUserVestInfo.fundingProposalId = event.params.proposalId;
+            flexUserVestInfo.recipient = event.params.proposer;
+            flexUserVestInfo.vestingStartTime = vestingStartTime;
+            flexUserVestInfo.vestingCliffEndTime = vestingCliffEndTime;
+            flexUserVestInfo.vestingInterval = vestingInterval;
+            flexUserVestInfo.vestingEndTime = vestingEndTime;
+            flexUserVestInfo.totalAmount = proposerVestInfo.getTokenAmount();
             flexUserVestInfo.created = false;
             flexUserVestInfo.save();
         }

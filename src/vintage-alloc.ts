@@ -51,21 +51,26 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
 
         let allocContract = VintageAllocationAdapterContract.bind(event.address);
 
+        //investors
         for (var i = 0; i < entity.lps.length; i++) {
             let vintageUserVestInfo = new VintageUserVestInfo(entity.proposalId.toHexString() + "-" + entity.lps[i]);
             vintageUserVestInfo.daoAddr = event.params.daoAddr;
             vintageUserVestInfo.fundingProposalId = event.params.proposalId;
             vintageUserVestInfo.recipient = Bytes.fromHexString(entity.lps[i]);
-            let vestInfo = allocContract.vestingInfos(
-                event.params.daoAddr,
-                vintageUserVestInfo.fundingProposalId,
-                Address.fromBytes(vintageUserVestInfo.recipient)
+            // let vestInfo = allocContract.vestingInfos(
+            //     event.params.daoAddr,
+            //     vintageUserVestInfo.fundingProposalId,
+            //     Address.fromBytes(vintageUserVestInfo.recipient)
+            // );
+            const paybackAmount = allocContract.getInvestmentRewards(event.params.daoAddr,
+                Address.fromBytes(vintageUserVestInfo.recipient),
+                event.params.proposalId
             );
             vintageUserVestInfo.vestingStartTime = vestingStartTime;
             vintageUserVestInfo.vestingCliffEndTime = vestingCliffEndTime;
             vintageUserVestInfo.vestingInterval = vestingInterval;
             vintageUserVestInfo.vestingEndTime = vestingEndTime;
-            vintageUserVestInfo.totalAmount = vestInfo.getTokenAmount();
+            vintageUserVestInfo.totalAmount = paybackAmount;
             vintageUserVestInfo.totalAmountFromWei = vintageUserVestInfo.totalAmount.div(BigInt.fromI64(10 ** 18)).toString();
             vintageUserVestInfo.created = false;
 
@@ -75,6 +80,7 @@ export function handleAllocateToken(event: AllocateTokenEvent): void {
         const managementFeeAddr = daoCont.getAddressConfiguration(
             Address.fromHexString("0x5460409b9aa4688f80c10b29c3d7ad16025f050f472a6882a45fa7bb9bd12fb1")
         );
+        //payback token for management fee
         let vestInfo = allocContract.vestingInfos(
             event.params.daoAddr,
             event.params.proposalId,

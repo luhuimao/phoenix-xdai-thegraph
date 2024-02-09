@@ -806,6 +806,7 @@ type VintageFundRaiseEntity @entity{
   id:ID!
   daoAddr: Bytes! # address
   fundRaiseProposalId: Bytes! # bytes32
+  tokenSymbol: String!
   fundNumber: String!
   tokenName: String!
   raisedAmount: BigInt! # uint256

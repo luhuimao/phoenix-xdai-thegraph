@@ -88,6 +88,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
 
         const erc20 = ERC20.bind(Address.fromBytes(entity.acceptTokenAddr));
         let fundRaiseEntity = new VintageFundRaiseEntity(event.params.proposalId.toHexString());
+        fundRaiseEntity.tokenSymbol = erc20.symbol();
         fundRaiseEntity.daoAddr = event.params.daoAddr;
         fundRaiseEntity.fundRaiseProposalId = event.params.proposalId;
         fundRaiseEntity.tokenName = erc20.name();
