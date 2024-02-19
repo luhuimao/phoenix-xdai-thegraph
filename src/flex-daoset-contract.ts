@@ -44,7 +44,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
     entity.proposer = event.transaction.from;
     entity.proposalType = BigInt.fromI32(event.params.pType);
     switch (event.params.pType) {
-        // PARTICIPANT_CAP,
+        // INVESTOR_CAP,
         // GOVERNOR_MEMBERSHIP,
         // INVESTOR_MEMBERSHIP,
         // VOTING,
@@ -52,7 +52,7 @@ export function handleProposalCreated(event: ProposalCreated): void {
         // PROPOSER_MEMBERHSIP,
         // POLL_FOR_INVESTMENT
         case 0:
-            entity.proposalTypeString = "PARTICIPANT_CAP";
+            entity.proposalTypeString = "INVESTOR_CAP";
             break;
         case 1:
             entity.proposalTypeString = "GOVERNOR_MEMBERSHIP";
